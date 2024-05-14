@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 100, // Adjust size as needed
-    height: 100, // Adjust size as needed
+    width: 100,
+    height: 100,
   },
 });
 
