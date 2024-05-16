@@ -17,73 +17,36 @@ import LogoComponent from './compontents/pages/LogoComponent';
 const Stack = createStackNavigator();
 
 const App = () => {
- 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name='LogoComponent' component={LogoComponent}/>
+       
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        
+        <Stack.Screen name="LogoComponent" component={LogoComponent} />
 
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          
-        />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Login" component={Login} />
 
-        <Stack.Screen
-          name="Header"
-          component={Header}
-          
-        />
-        <Stack.Screen
-          name="Stream-Chat"
-          component={StreamChat}
-          
-        />
+        <Stack.Screen name="Header" component={Header} />
+        <Stack.Screen name="Stream-Chat" component={StreamChat} />
 
-        <Stack.Screen
-          name="Chating"
-          component={Chating}
-          
-        />
+        <Stack.Screen name="Chating" component={Chating} />
 
-        <Stack.Screen
-          name="About"
-          component={About}
-          
-        />
+        <Stack.Screen name="About" component={About} />
 
-        <Stack.Screen
-          name="Live-Streaming"
-          component={LiveStreaming}
-          
-        />
+        <Stack.Screen name="Live-Streaming" component={LiveStreaming} />
 
-        <Stack.Screen
-          name="Profile"
-          component={Profile}
-          
-        />
+        <Stack.Screen name="Profile" component={Profile} />
 
-        <Stack.Screen
-          name="live-header"
-          component={LiveHeader}
-          
-        />
+        <Stack.Screen name="live-header" component={LiveHeader} />
 
-        <Stack.Screen name='Question' component={Question}/>
-        <Stack.Screen
-          name="topBar-Navigation"
-          component={TopBarNavigator}
-          
-        />
+        <Stack.Screen name="Question" component={Question} />
+
+        <Stack.Screen name="topBar-Navigation" component={TopBarNavigator} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default App
+export default App;

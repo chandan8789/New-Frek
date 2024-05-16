@@ -10,7 +10,7 @@ const navigation = useNavigation();
   useEffect(() => {
     Animated.timing(rotation, {
       toValue: 360,
-      duration: 3000,
+      duration: 2500,
       useNativeDriver: true,
     }).start(() => {
       Animated.timing(zoom, {

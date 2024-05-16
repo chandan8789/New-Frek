@@ -14,8 +14,8 @@ function TopBarNavigation() {
     <Tab.Navigator
       initialRouteName="For You"
       tabBarOptions={{
-        activeTintColor: 'blue',
-        labelStyle: {fontSize: 14 , fontWeight:"bold"},
+        activeTintColor: 'black',
+        labelStyle: {fontSize: 13, fontWeight:"bold"},
         style: {backgroundColor: 'white'},
       }}>
       <Tab.Screen

@@ -24,42 +24,46 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
-  const [gender, setGender] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
   const navigation = useNavigation();
 
-  const handleSignup = async () => {
+  const handleSubmit = async () => {
+    if (!name || !email || !dob || !selectedValue || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill all the fields');
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+  
     try {
-      const response = await axios.post(
-        'https://frek-dating-2.onrender.com/auth/signup',
-        {
-          name: name,
-          email: email,
-          dob: dob,
-          gender: selectedValue,
-          password: password,
-          confirmPassword: confirmPassword,
-        },
-
-        navigation.navigate('Question'),
-      );
-      // console.log(response.data);
-
-      if (response.data && response.data === 'User created Successfully') {
-        Alert.alert('Success', 'User successfully signed up');
-        navigation.navigate('Login');
-        setName('');
-        setEmail('');
-        setDob('');
-        setGender('');
-        setPassword('');
-        setConfirmPassword('');
+      const response = await axios.post('http://10.0.2.2:4000/auth/signup', {
+        name: name,
+        email: email,
+        dob: dob,
+        gender: selectedValue,
+        password: password,
+      });
+  
+      console.log('Signup Response:', response.data);
+  
+      if (response.data.valid === true) {
+        Alert.alert('Success', 'User Successfully Signed');
+        navigation.navigate('Question');
+      } else if (response.data.error === 'User already exists') {
+        Alert.alert('Error', 'User already exists. Please login instead.');
+      } else {
+        Alert.alert('Error', 'Something went wrong');
       }
     } catch (error) {
-      console.error('Error signing up:', error.response.data);
+      console.error('Error signing up:', error);
     }
   };
+  
 
   return (
     <ImageBackground
@@ -115,14 +119,14 @@ const Signup = () => {
               onChangeText={text => setDob(text)}
             />
             <Text style={styles.titleName}>Gender</Text>
-            <View style={styles.nameField}>
+            <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={selectedValue}
                 onValueChange={(itemValue, itemIndex) =>
                   setSelectedValue(itemValue)
                 }
-                style={{color: 'white'}}>
-                <Picker.Item label="Gender" value="Select an Option" />
+                style={styles.picker}>
+                <Picker.Item label="Select Gender" value="" />
                 <Picker.Item label="Male" value="Male" />
                 <Picker.Item label="Female" value="Female" />
                 <Picker.Item label="Other" value="Other" />
@@ -149,8 +153,8 @@ const Signup = () => {
             />
             <TouchableOpacity
               style={styles.signupButton}
-              onPress={handleSignup}>
-              <Text style={styles.signupButtonText}>Sign Up</Text>
+              onPress={handleSubmit}>
+              <Text style={styles.signupButtonText}>Signup</Text>
             </TouchableOpacity>
             <View style={styles.loginLinkContainer}>
               <Text style={styles.loginText}>Already have an account? </Text>
@@ -177,7 +181,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     paddingHorizontal: widthPercentageToDP('5%'),
-
     backgroundColor: '#000000aa',
   },
   welcome: {
@@ -207,6 +210,15 @@ const styles = StyleSheet.create({
     paddingLeft: heightPercentageToDP('2%'),
     borderWidth: heightPercentageToDP('0.1%'),
     fontSize: heightPercentageToDP(1.9),
+    color: 'white',
+  },
+  pickerContainer: {
+    borderColor: 'white',
+    borderWidth: heightPercentageToDP('0.1%'),
+    borderRadius: heightPercentageToDP('1%'),
+    marginTop: heightPercentageToDP('1%'),
+  },
+  picker: {
     color: 'white',
   },
   signupButton: {

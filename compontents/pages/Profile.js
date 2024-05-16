@@ -106,7 +106,7 @@ const Profile = () => {
           />
           <ProfileComponent
             img1={require('../images/messageProfile.png')}
-            dis={'Name'}
+            dis={'Email'}
             name={'alinasaline@gmail.com'}
             img2={require('../images/rightarrow.png')}
           />

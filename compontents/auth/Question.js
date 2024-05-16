@@ -6,7 +6,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {Picker} from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
@@ -35,65 +35,59 @@ const UserQuestion = ({des, yes, no}) => {
           <Text style={{fontSize: 14, color: 'black'}}>{des}</Text>
         </View>
         <View style={{flexDirection: 'row', gap: 10}}>
-          <Text style={{fontSize: 14, color: 'blue'}}>{yes}</Text>
-          <Text style={{fontSize: 14, color: 'black'}}>{no}</Text>
+          <TouchableOpacity onPress={yes}>
+            <Text style={{fontSize: 14, color: 'blue'}}>Yes</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={no}>
+            <Text style={{fontSize: 14, color: 'black'}}>No</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </>
   );
 };
 
-// const UserChoose = () => {
-//   const [selectedValue, setSelectedValue] = useState('');
-
-//   return (
-//     <>
-//       <View style={styles.nameField}>
-//         <Picker
-//           selectedValue={selectedValue}
-//           onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-//           style={{color: 'black'}}>
-//           <Picker.Item label="When do you prefer to have sex?" />
-//           <Picker.Item label="At night" value="At night" />
-//           <Picker.Item label="In the morning" value="In the morning" />
-//           <Picker.Item label="Mid-Afternoon" value="Mid-Afternoon" />
-//         </Picker>
-//       </View>
-//     </>
-//   );
-// };
-
-// const TournOn = () => {
-//   const [itemSelect, setItemSelect] = useState('');
-
-//   return (
-//     <>
-//       <View style={styles.nameField}>
-//         <Picker
-//           itemSelect={itemSelect}
-//           onValueChange={(itemValue, itemIndex) => setItemSelect(itemValue)}
-//           style={{color: 'black'}}>
-//           <Picker.Item label="Where, and how, can I touch you turn-on?" />
-//           <Picker.Item label="Male" value="At night" />
-//           <Picker.Item label="Female" value="In the morning" />
-//           <Picker.Item label="Other" value="Mid-Afternoon" />
-//         </Picker>
-//       </View>
-//     </>
-//   );
-// };
-
 const Question = () => {
+  const [question, setQuestion] = useState([]);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log('question::::::::::', question);
+  }, [question]);
+
   return (
     <ImageBackground
       source={require('../images/background.jpg')}
       style={styles.backgroundImage}>
-      <ScrollView>
+      <ScrollView style={{backgroundColor: '#000000aa'}}>
         <View style={styles.container}>
           <NameUser />
           <View>
-            <UserQuestion des="Do you like to have sex?" yes="Yes" no="No" />
+            <UserQuestion
+              des="Do you like to have sex?"
+              yes={() => {
+                console.log('Yes');
+                setQuestion([
+                  ...question,
+                  {
+                    question: 'Do you like to have sex?',
+                    answer: 'yes',
+                  },
+                ]);
+              }}
+              no={() => {
+                console.log('no');
+                setQuestion([
+                  ...question,
+                  {
+                    question: 'Do you like to have sex?',
+                    answer: 'no',
+                  },
+                ]);
+              }}
+            />
+
             <UserQuestion des="Do you want to have kids?" yes="Yes" no="No" />
             <UserQuestion
               des="Do you like to read an erotic book?"
@@ -215,6 +209,5 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     height: heightPercentageToDP('100%'),
-    backgroundColor: '#000000aa'
   },
 });

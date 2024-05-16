@@ -201,13 +201,13 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    height: heightPercentageToDP('7%'),
-    width: widthPercentageToDP('14%'),
+    height: heightPercentageToDP('6%'),
+    width: widthPercentageToDP('12%'),
     marginTop:heightPercentageToDP("1%")
   },
   highlightsMembers: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 10,
   },
   mailImage: {
     height: 50,
