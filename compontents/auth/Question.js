@@ -11,6 +11,8 @@ import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {Picker} from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
+import mobile_siteConfig from '../service/mobile-site-config';
+import {PutDataWithToken} from '../service/mobileApi';
 
 const NameUser = () => {
   return (
@@ -75,52 +77,59 @@ const UserQuestion = ({des, yes, no}) => {
 const Question = () => {
   const [question, setQuestion] = useState([
     {
-      id: 1,
       question: 'Do you like to have sex?',
       answer: null,
     },
     {
-      id: 2,
       question: 'Do you want to have kids?',
       answer: null,
     },
     {
-      id: 3,
       question: 'Do you like to read erotic books?',
       answer: null,
     },
     {
-      id: 4,
       question: 'Do you like to cuddel after sex?',
       answer: null,
     },
     {
-      id: 5,
       question: 'If you could go anywhere, where would we go?',
       answer: null,
     },
     {
-      id: 6,
       question: 'Have you ever got caught watching porn?',
       answer: null,
     },
     {
-      id: 7,
       question: 'Any pet about living with others?',
       answer: null,
     },
     {
-      id: 8,
       question: 'Do you like dirty talking phone/texts?',
       answer: null,
     },
     {
-      id: 9,
       question: 'Have you ever been to sex shop?',
       answer: null,
     },
   ]);
-  
+
+  const submitUserResponseToQuestion = () => {
+    let req = {
+      questions: question,
+    };
+
+    console.log('req::::::::::::::::2', req);
+
+    PutDataWithToken(req, mobile_siteConfig.question)
+      .then(res => {
+        console.log('submitUserResponseToQuestion:::::', res);
+      })
+      .catch(error => {
+        console.log('error:::::::', error);
+      });
+  };
+
   const navigation = useNavigation();
 
   const updateAnswer = (index, val) => {
@@ -142,7 +151,7 @@ const Question = () => {
           <View>
             <FlatList
               data={question}
-              keyExtractor={item => item.id.toString()}
+              // keyExtractor={item => item.id.toString()}
               renderItem={({item, index}) => (
                 <View key={index}>
                   <UserQuestion
@@ -165,7 +174,7 @@ const Question = () => {
             <TouchableOpacity style={styles.button}>
               <Text
                 style={styles.buttonText}
-                onPress={() => navigation.navigate('Login')}>
+                onPress={() => submitUserResponseToQuestion()}>
                 Submit
               </Text>
             </TouchableOpacity>
