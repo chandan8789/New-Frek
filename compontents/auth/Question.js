@@ -6,21 +6,21 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
-import { Picker } from '@react-native-picker/picker';
-import { useNavigation } from '@react-navigation/native';
-import { FlatList } from 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
+import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {Picker} from '@react-native-picker/picker';
+import {useNavigation} from '@react-navigation/native';
+import {FlatList} from 'react-native-gesture-handler';
 
 const NameUser = () => {
   return (
     <>
       <View>
-        <Text style={{ fontSize: 16, color: 'white' }}>Hey, John Smith</Text>
-        <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>
+        <Text style={{fontSize: 16, color: 'white'}}>Hey, John Smith</Text>
+        <Text style={{fontSize: 20, color: 'white', fontWeight: 'bold'}}>
           You have answer following
         </Text>
-        <Text style={{ fontSize: 22, color: 'white', fontWeight: 'bold' }}>
+        <Text style={{fontSize: 22, color: 'white', fontWeight: 'bold'}}>
           question for better experience.
         </Text>
       </View>
@@ -28,36 +28,51 @@ const NameUser = () => {
   );
 };
 
-const UserQuestion = ({ des, yes, no }) => {
+const UserQuestion = ({des, yes, no}) => {
   return (
     <>
       <View style={styles.userQuestion}>
         <View>
-          <Text style={{ fontSize: 14, color: 'black' }}>{des?.question}</Text>
+          <Text style={{fontSize: 14, color: 'black'}}>{des?.question}</Text>
         </View>
 
-
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={{flexDirection: 'row', gap: 10}}>
           <TouchableOpacity onPress={yes}>
-            <Text style={{ fontSize: 15, color: des?.answer === null ? 'grey' : des?.answer === true ? 'blue' : 'grey' }}>Yes</Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color:
+                  des?.answer === null
+                    ? 'grey'
+                    : des?.answer === true
+                    ? 'blue'
+                    : 'grey',
+              }}>
+              Yes
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={no}>
-            <Text style={{ fontSize: 15, color: des?.answer === null ? 'grey' : des?.answer === false ? 'blue' : 'grey' }}>No</Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color:
+                  des?.answer === null
+                    ? 'grey'
+                    : des?.answer === false
+                    ? 'blue'
+                    : 'grey',
+              }}>
+              No
+            </Text>
           </TouchableOpacity>
         </View>
-
-
       </View>
     </>
   );
 };
 
-
-
 const Question = () => {
-
-
   const [question, setQuestion] = useState([
     {
       id: 1,
@@ -103,20 +118,16 @@ const Question = () => {
       id: 9,
       question: 'Have you ever been to sex shop?',
       answer: null,
-    }
-
-
-
-
+    },
   ]);
+  
   const navigation = useNavigation();
 
-  // Function to update the answer of a question by index
   const updateAnswer = (index, val) => {
     setQuestion(prevData => {
-      const newData = [...prevData]; // Make a copy of the state array
-      newData[index].answer = val; // Update the answer to true at the specified index
-      return newData; // Return the updated array
+      const newData = [...prevData];
+      newData[index].answer = val;
+      return newData;
     });
   };
 
@@ -124,34 +135,31 @@ const Question = () => {
     <ImageBackground
       source={require('../images/background.jpg')}
       style={styles.backgroundImage}>
-      <ScrollView style={{ backgroundColor: '#000000aa' }}>
+      <ScrollView style={{backgroundColor: '#000000aa'}}>
         <View style={styles.container}>
           <NameUser />
 
           <View>
             <FlatList
               data={question}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item, index }) => (
+              keyExtractor={item => item.id.toString()}
+              renderItem={({item, index}) => (
                 <View key={index}>
                   <UserQuestion
                     des={item}
                     yes={() => {
                       console.log('Yes');
-                      updateAnswer(index, true)
+                      updateAnswer(index, true);
                     }}
                     no={() => {
                       console.log('no');
-                      updateAnswer(index, false)
+                      updateAnswer(index, false);
                     }}
                   />
                 </View>
               )}
             />
-
-
           </View>
-
 
           <View>
             <TouchableOpacity style={styles.button}>
@@ -169,11 +177,11 @@ const Question = () => {
                 gap: 5,
               }}>
               <Text
-                style={{ color: 'white', fontSize: 15 }}
+                style={{color: 'white', fontSize: 15}}
                 onPress={() => navigation.navigate('Login')}>
                 Skip:
               </Text>
-              <Text style={{ color: 'blue', fontSize: 15 }}>Home</Text>
+              <Text style={{color: 'blue', fontSize: 15}}>Home</Text>
             </View>
           </View>
         </View>

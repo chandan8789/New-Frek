@@ -42,6 +42,7 @@ const Signup = ({ navigation }) => {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
+
     let request = {
       name: name,
       email: email,
@@ -64,30 +65,6 @@ const Signup = ({ navigation }) => {
         console.log("error:::::::", error);
 
       });
-
-
-    // try {
-    //   const response = await axios.post('http://10.0.2.2:4000/auth/signup', {
-    //     name: name,
-    //     email: email,
-    //     dob: dob,
-    //     gender: selectedValue,
-    //     password: password,
-    //   });
-
-    //   console.log('Signup Response:', response.data);
-
-    //   if (response.data.valid === true) {
-    //     Alert.alert('Success', 'User Successfully Signed');
-    //     navigation.navigate('Question');
-    //   } else if (response.data.error === 'User already exists') {
-    //     Alert.alert('Error', 'User already exists. Please login instead.');
-    //   } else {
-    //     Alert.alert('Error', 'Something went wrong');
-    //   }
-    // } catch (error) {
-    //   console.error('Error signing up:', error);
-    // }
   };
 
 
