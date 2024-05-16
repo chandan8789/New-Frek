@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,12 +14,15 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+// import { useNavigation } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import mobile_siteConfig from '../service/mobile-site-config';
+import { postData } from '../service/mobileApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -27,43 +30,66 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const handleSubmit = async () => {
     if (!name || !email || !dob || !selectedValue || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill all the fields');
       return;
     }
-  
+
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
-  
-    try {
-      const response = await axios.post('http://10.0.2.2:4000/auth/signup', {
-        name: name,
-        email: email,
-        dob: dob,
-        gender: selectedValue,
-        password: password,
-      });
-  
-      console.log('Signup Response:', response.data);
-  
-      if (response.data.valid === true) {
-        Alert.alert('Success', 'User Successfully Signed');
-        navigation.navigate('Question');
-      } else if (response.data.error === 'User already exists') {
-        Alert.alert('Error', 'User already exists. Please login instead.');
-      } else {
-        Alert.alert('Error', 'Something went wrong');
-      }
-    } catch (error) {
-      console.error('Error signing up:', error);
+    let request = {
+      name: name,
+      email: email,
+      dob: dob,
+      gender: selectedValue,
+      password: password,
     }
+
+    postData(request, mobile_siteConfig.signup)
+      .then((res) => {
+        console.log('handleSubmit', res);
+        if (res?.message === 'User created successfully') {
+          AsyncStorage.setItem(
+            mobile_siteConfig.MOB_ACCESS_TOKEN_KEY, res?.token
+          );
+          navigation.navigate('Question')
+        }
+      })
+      .catch((error) => {
+        console.log("error:::::::", error);
+
+      });
+
+
+    // try {
+    //   const response = await axios.post('http://10.0.2.2:4000/auth/signup', {
+    //     name: name,
+    //     email: email,
+    //     dob: dob,
+    //     gender: selectedValue,
+    //     password: password,
+    //   });
+
+    //   console.log('Signup Response:', response.data);
+
+    //   if (response.data.valid === true) {
+    //     Alert.alert('Success', 'User Successfully Signed');
+    //     navigation.navigate('Question');
+    //   } else if (response.data.error === 'User already exists') {
+    //     Alert.alert('Error', 'User already exists. Please login instead.');
+    //   } else {
+    //     Alert.alert('Error', 'Something went wrong');
+    //   }
+    // } catch (error) {
+    //   console.error('Error signing up:', error);
+    // }
   };
-  
+
 
   return (
     <ImageBackground
