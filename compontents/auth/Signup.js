@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,15 +14,16 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
-// import { useNavigation } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import mobile_siteConfig from '../service/mobile-site-config';
-import { postData } from '../service/mobileApi';
+import {postData} from '../service/mobileApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
 
-const Signup = ({ navigation }) => {
+const Signup = ({navigation}) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,10 +31,15 @@ const Signup = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // const navigation = useNavigation();
-
   const handleSubmit = async () => {
-    if (!name || !email || !dob || !selectedValue || !password || !confirmPassword) {
+    if (
+      !name ||
+      !email ||
+      !dob ||
+      !selectedValue ||
+      !password ||
+      !confirmPassword
+    ) {
       Alert.alert('Error', 'Please fill all the fields');
       return;
     }
@@ -49,24 +55,45 @@ const Signup = ({ navigation }) => {
       dob: dob,
       gender: selectedValue,
       password: password,
+    };
+
+    try {
+      const res = await postData(request, mobile_siteConfig.signup);
+
+      console.log('handleSubmit', res);
+
+      if (res?.message === 'User created successfully') {
+        await AsyncStorage.setItem(
+          mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
+          res?.token,
+        );
+
+        Alert.alert('Success', 'Signup successfully');
+        navigation.navigate('Question');
+      } else if (res?.message === 'User already exists') {
+        Alert.alert('Error', 'User already exists');
+      } else {
+        Alert.alert('Error', 'Signup failed. Please try again.');
+      }
+    } catch (error) {
+      console.log('error:::::::', error);
+      Alert.alert('Error', 'An error occurred. Please try again later.');
     }
+  };
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
-    postData(request, mobile_siteConfig.signup)
-      .then((res) => {
-        console.log('handleSubmit', res);
-        if (res?.message === 'User created successfully') {
-          AsyncStorage.setItem(
-            mobile_siteConfig.MOB_ACCESS_TOKEN_KEY, res?.token
-          );
-          navigation.navigate('Question')
-        }
-      })
-      .catch((error) => {
-        console.log("error:::::::", error);
+  const handleConfirm = selectedDate => {
+    console.log('selecte date::', selectedDate);
 
-      });
+    const formattedDate = moment(selectedDate).format('DD/MM/YYYY');
+    console.log('formattedDate:::', formattedDate);
+    setOpen(false);
+    setDate(selectedDate);
+    setDob(selectedDate.toDateString()); // or any format you prefer
   };
 
+  // console.log('data:::', date, date.length);
 
   return (
     <ImageBackground
@@ -80,7 +107,7 @@ const Signup = ({ navigation }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              marginTop: '2%',
+              marginTop: '5%',
             }}>
             <View>
               <Text style={styles.welcome}>Welcome,</Text>
@@ -114,13 +141,28 @@ const Signup = ({ navigation }) => {
               keyboardType="email-address"
             />
             <Text style={styles.titleName}>Date of Birth</Text>
-            <TextInput
-              style={styles.nameField}
-              placeholder="Enter your DOB"
-              placeholderTextColor="white"
-              value={dob}
-              onChangeText={text => setDob(text)}
+            <View style={styles.nameField}>
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: heightPercentageToDP(1.9),
+                    paddingVertical: heightPercentageToDP(1.7),
+                  }}>
+                  {dob.length === 0 ? 'Enter your DOB' : dob}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <DatePicker
+              modal
+              open={open}
+              date={date}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={() => setOpen(false)}
             />
+
             <Text style={styles.titleName}>Gender</Text>
             <View style={styles.pickerContainer}>
               <Picker

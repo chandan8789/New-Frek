@@ -9,50 +9,58 @@ import {
   ScrollView,
   ImageBackground,
   Alert,
-  
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {postData} from '../service/mobileApi';
+import mobile_siteConfig from '../service/mobile-site-config';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Login = ({navigation}) => {
+  const [email, setEmail] = useState('sujeet@gmail.com');
+  const [password, setPassword] = useState('8789');
 
-  const navigation = useNavigation();
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Fill the require field');
+      return;
+    }
 
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await axios.post('https://frek-dating-2.onrender.com/auth/login', {
-  //       email: email,
-  //       password: password,
-  //     });
+    let request = {
+      email: email,
+      password: password,
+    };
 
-  //     console.log('Login response:', response.data);
+    try {
+      const res = await postData(request, mobile_siteConfig.login);
 
-  //     if (response.data && response.data.token) {
-  //       Alert.alert('Logged In Successfull');
-  //       // AsyncStorage.setItem("token", res.data.data)
-  //       navigation.navigate('Header');
-  //     } else {
-  //       Alert.alert('Error', 'Invalid email or password');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error logging in:', error.response || error);
-  //     Alert.alert('Error', 'Failed to login. Please try again later.');
-  //   }
-  // };
+      console.log('handleLogin', res);
+
+      if (res?.message === 'Logged in successfully') {
+        await AsyncStorage.setItem(
+          mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
+          res?.token,
+        );
+        Alert.alert('Success', 'Logged in Successfully');
+        navigation.navigate('Header');
+        return;
+      } else {
+        Alert.alert('Error', res?.message || 'Login failed');
+      }
+    } catch (error) {
+      console.log('error:::::::', error);
+      Alert.alert('Error', 'An error occurred. Please try again later.');
+    }
+  };
 
   return (
     <ImageBackground
       source={require('../images/background.jpg')}
       style={styles.backgroundImage}>
-    
       <KeyboardAwareScrollView
         contentContainerStyle={{
           flex: 1,
@@ -93,7 +101,7 @@ const Login = () => {
             />
           </View>
           <View>
-            <TouchableOpacity style={styles.signupButton} onPress={()=>navigation.navigate('Header')}>
+            <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
               <Text style={styles.signupButtonText}>Login</Text>
             </TouchableOpacity>
           </View>
@@ -171,7 +179,5 @@ const styles = StyleSheet.create({
     height: heightPercentageToDP('100%'),
   },
 });
-
-
 
 // keyboardShouldPersistTaps={"always"}

@@ -6,6 +6,8 @@ const mobile_siteConfig = Object.freeze({
   // auth
   signup: 'auth/signup',
   question: 'user/questions',
+  login: 'auth/login',
+  carousel: 'user/feed',
 });
 
 export default mobile_siteConfig;

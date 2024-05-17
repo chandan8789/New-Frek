@@ -4,12 +4,14 @@ import Carousel from '../pages/Carousel';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import axios from 'axios';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 
 const {width, height} = Dimensions.get('window');
 
 const Header = () => {
-
   const navigation = useNavigation();
 
   const handleImageClick = () => {
@@ -32,7 +34,7 @@ const Header = () => {
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomHeader}>Welcome Back,</Text>
-              <Text style={styles.nameHeader}>Chandan Sharma</Text>
+              <Text style={styles.nameHeader}>Chandan</Text>
             </View>
           </View>
           <View style={styles.iconContainer}>

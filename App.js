@@ -19,15 +19,14 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-       
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        
         <Stack.Screen name="LogoComponent" component={LogoComponent} />
 
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Login" component={Login} />
 
         <Stack.Screen name="Header" component={Header} />
+
         <Stack.Screen name="Stream-Chat" component={StreamChat} />
 
         <Stack.Screen name="Chating" component={Chating} />
@@ -43,7 +42,6 @@ const App = () => {
         <Stack.Screen name="Question" component={Question} />
 
         <Stack.Screen name="topBar-Navigation" component={TopBarNavigator} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );
