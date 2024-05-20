@@ -60,56 +60,45 @@ const Signup = ({navigation}) => {
     try {
       const res = await postData(request, mobile_siteConfig.signup);
 
-      console.log('handleSubmit', res);
+      console.log('handleSubmit response:', res);
 
       if (res?.message === 'User created successfully') {
         await AsyncStorage.setItem(
           mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
           res?.token,
         );
-
         Alert.alert('Success', 'Signup successfully');
         navigation.navigate('Question');
+        // await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'TRUE');
       } else if (res?.message === 'User already exists') {
         Alert.alert('Error', 'User already exists');
       } else {
         Alert.alert('Error', 'Signup failed. Please try again.');
       }
     } catch (error) {
-      console.log('error:::::::', error);
+      console.error('handleSubmit error:', error);
       Alert.alert('Error', 'An error occurred. Please try again later.');
     }
   };
+
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
   const handleConfirm = selectedDate => {
-    console.log('selecte date::', selectedDate);
-
     const formattedDate = moment(selectedDate).format('DD/MM/YYYY');
-    console.log('formattedDate:::', formattedDate);
     setOpen(false);
     setDate(selectedDate);
-    setDob(selectedDate.toDateString()); // or any format you prefer
+    setDob(formattedDate);
   };
-
-  // console.log('data:::', date, date.length);
 
   return (
     <ImageBackground
       source={require('../images/background.jpg')}
       style={styles.backgroundImage}>
-      <ScrollView>
-        <KeyboardAwareScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="handled">
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: '5%',
-            }}>
-            <View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps={'always'}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={styles.header}>
               <Text style={styles.welcome}>Welcome,</Text>
               <Text style={styles.titles}>Enter Your Details to</Text>
               <Text style={styles.titles}>Create Account</Text>
@@ -141,14 +130,10 @@ const Signup = ({navigation}) => {
               keyboardType="email-address"
             />
             <Text style={styles.titleName}>Date of Birth</Text>
+
             <View style={styles.nameField}>
               <TouchableOpacity onPress={() => setOpen(true)}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: heightPercentageToDP(1.9),
-                    paddingVertical: heightPercentageToDP(1.7),
-                  }}>
+                <Text style={styles.dobText}>
                   {dob.length === 0 ? 'Enter your DOB' : dob}
                 </Text>
               </TouchableOpacity>
@@ -167,9 +152,7 @@ const Signup = ({navigation}) => {
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={selectedValue}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedValue(itemValue)
-                }
+                onValueChange={itemValue => setSelectedValue(itemValue)}
                 style={styles.picker}>
                 <Picker.Item label="Select Gender" value="" />
                 <Picker.Item label="Male" value="Male" />
@@ -201,6 +184,7 @@ const Signup = ({navigation}) => {
               onPress={handleSubmit}>
               <Text style={styles.signupButtonText}>Signup</Text>
             </TouchableOpacity>
+
             <View style={styles.loginLinkContainer}>
               <Text style={styles.loginText}>Already have an account? </Text>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -214,11 +198,9 @@ const Signup = ({navigation}) => {
   );
 };
 
-export default Signup;
-
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1,
+    // flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
     backgroundColor: '#000000aa',
@@ -227,18 +209,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: widthPercentageToDP('5%'),
     backgroundColor: '#000000aa',
+    height: heightPercentageToDP('100%'),
+  },
+  avatar: {
+    marginTop: heightPercentageToDP('2%'),
+    height: heightPercentageToDP('10%'),
+    width: widthPercentageToDP('15%'),
+  },
+  header: {
+    marginTop: '5%',
+    marginBottom: heightPercentageToDP('2%'),
   },
   welcome: {
     color: 'white',
-    fontSize: heightPercentageToDP(2.58),
+    fontSize: heightPercentageToDP(2.5),
   },
   titles: {
     color: 'white',
-    fontSize: heightPercentageToDP(2.98),
-  },
-  avatar: {
-    height: heightPercentageToDP('10%'),
-    width: widthPercentageToDP('15%'),
+    fontSize: heightPercentageToDP(2.7),
   },
   inputFields: {
     marginTop: heightPercentageToDP('1%'),
@@ -256,6 +244,11 @@ const styles = StyleSheet.create({
     borderWidth: heightPercentageToDP('0.1%'),
     fontSize: heightPercentageToDP(1.9),
     color: 'white',
+  },
+  dobText: {
+    color: 'white',
+    fontSize: heightPercentageToDP(1.9),
+    paddingVertical: heightPercentageToDP(1.7),
   },
   pickerContainer: {
     borderColor: 'white',
@@ -292,3 +285,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default Signup;

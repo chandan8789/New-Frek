@@ -8,25 +8,39 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-
+import mobile_siteConfig from '../service/mobile-site-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Footer from './Footer';
 const {width, height} = Dimensions.get('window');
 
 const Header = () => {
   const navigation = useNavigation();
+  const [userData, setUserData] = useState([]);
+  useEffect(() => {
+    // console.log(mobile_siteConfig.MOB_ACCESS_TOKEN_KEY);
 
-  const handleImageClick = () => {
-    navigation.navigate('Stream-Chat');
-  };
+    const getUserDetails = async () => {
+      let value = await AsyncStorage.getItem(mobile_siteConfig.USER_DETAIL);
+      let value1 = await AsyncStorage.getItem(mobile_siteConfig.IS_LOGIN);
+      let value2 = await AsyncStorage.getItem(
+        mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
+      );
+      console.log('ppppppppppppppppppppp', value1, value2);
 
-  const handleAboutClick = () => {
-    navigation.navigate('Profile');
-  };
+      if (value !== null) {
+        console.log('value::::::::::', value);
+        setUserData(JSON.parse(value));
+      }
+    };
+    getUserDetails();
+  }, []);
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.topHeader}>
           <View style={styles.userInfo}>
-            <TouchableOpacity onPress={handleAboutClick}>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
               <Image
                 source={require('../images/profileImage.png')}
                 style={styles.avatar}
@@ -34,11 +48,12 @@ const Header = () => {
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomHeader}>Welcome Back,</Text>
-              <Text style={styles.nameHeader}>Chandan</Text>
+              <Text style={styles.nameHeader}>{userData?.name}</Text>
             </View>
           </View>
           <View style={styles.iconContainer}>
-            <TouchableOpacity onPress={handleImageClick}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Stream-Chat')}>
               <Image
                 source={require('../images/msgicon.png')}
                 style={styles.msgIcon}
@@ -47,7 +62,10 @@ const Header = () => {
           </View>
         </View>
       </View>
+
       <Carousel />
+
+      <Footer />
     </>
   );
 };

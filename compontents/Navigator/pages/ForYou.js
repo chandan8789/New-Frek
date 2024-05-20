@@ -15,6 +15,7 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
+import HomePage from '../../stream/screen/HomePage';
 
 const {width, height} = Dimensions.get('window');
 
@@ -33,7 +34,7 @@ const GoLive = ({img}) => {
   const navigation = useNavigation();
 
   const goToLive = () => {
-    navigation.navigate('Live-Streaming');
+    navigation.navigate('Host-Page');
   };
 
   return (
@@ -48,8 +49,8 @@ const GoLive = ({img}) => {
       </View>
       <View style={styles.GoLives}>
         <TouchableOpacity onPress={goToLive}>
-          <Text style={{fontSize: 20, fontWeight: 600, color: 'black'}}>
-            Go Live
+          <Text>
+            <HomePage />
           </Text>
         </TouchableOpacity>
       </View>
@@ -169,7 +170,7 @@ const ForYou = () => {
           style={{
             flexDirection: 'row',
             marginTop: 10,
-         
+
             justifyContent: 'space-around',
           }}>
           <CardsMember img={require('../../images/hightmen.png')} />
@@ -180,7 +181,7 @@ const ForYou = () => {
       <GoLive />
 
       {/* This is the footer */}
-      <View style={{}}>
+      <View>
         <Footer />
       </View>
     </>
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   avatar: {
     height: heightPercentageToDP('6%'),
     width: widthPercentageToDP('12%'),
-    marginTop:heightPercentageToDP("1%")
+    marginTop: heightPercentageToDP('1%'),
   },
   highlightsMembers: {
     flexDirection: 'row',

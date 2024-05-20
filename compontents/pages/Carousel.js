@@ -9,8 +9,10 @@ import {
 import React, {useEffect, useState} from 'react';
 import Carousel from 'react-native-snap-carousel';
 import Footer from './Footer';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {State, TapGestureHandler} from 'react-native-gesture-handler';
+import {getData} from '../service/mobileApi';
+import mobile_siteConfig from '../service/mobile-site-config';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = SLIDER_WIDTH * 0.7;
@@ -153,39 +155,44 @@ function carouselCardItem({item, index}) {
           justifyContent: 'center',
           gap: 5,
         }}>
-        <Text style={styles.Adventures}>{item?.name}</Text>
-        <Text style={styles.Adventures}>({item?.age})</Text>
+        <Text style={styles.Adventures}>
+          {item?.name !== undefined && item?.name}
+        </Text>
+        <Text style={styles.Adventures}>
+          ({item?.age !== undefined && item?.age})
+        </Text>
       </View>
     </View>
   );
 }
 
 const CarouselComponent = () => {
-  // const navigation = useNavigation();
-  // const backToHomePage = () => {
-  //   navigation.navigate('Live-Streaming');
-  // };
+  const isFocused = useIsFocused();
 
   // api call
+  const [data, setData] = useState('');
+
+  const userName = async () => {
+    const res = await getData(mobile_siteConfig.carousel);
+    console.log('ressssspppp', res);
+    setData(res.data);
+  };
+
+  useEffect(() => {
+    userName();
+  }, [isFocused]);
 
   return (
     <>
       <View style={styles.container}>
-        {/* <TapGestureHandler
-          onHandlerStateChange={event => {
-            if (event.nativeEvent.state === State.ACTIVE) {
-              backToHomePage();
-            }
-          }}> */}
         <Carousel
+          // data={data}
           data={sliderImage}
           renderItem={carouselCardItem}
           sliderWidth={SLIDER_WIDTH}
           itemWidth={ITEM_WIDTH}
         />
-        {/* </TapGestureHandler> */}
       </View>
-      <Footer />
     </>
   );
 };

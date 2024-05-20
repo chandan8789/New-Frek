@@ -1,11 +1,28 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
-import { View, Animated, StyleSheet, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {View, Animated, StyleSheet, Image} from 'react-native';
+import mobile_siteConfig from '../service/mobile-site-config';
 
 const LogoComponent = () => {
-const navigation = useNavigation();
+  const navigation = useNavigation();
   const [rotation] = useState(new Animated.Value(0));
   const [zoom] = useState(new Animated.Value(1));
+
+  const handleNavigation = async () => {
+    var val = await AsyncStorage.getItem(
+      mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
+    );
+    var isLogin = await AsyncStorage.getItem(mobile_siteConfig.IS_LOGIN);
+    // navigation.navigate('Signup');
+    console.log('pppppppppppppppp1::', isLogin, val);
+    // console.log('val::::::', val, typeof val);
+    if (val !== null && isLogin == 'TRUE') {
+      navigation.navigate('Header');
+    } else {
+      navigation.navigate('Login');
+    }
+  };
 
   useEffect(() => {
     Animated.timing(rotation, {
@@ -17,16 +34,15 @@ const navigation = useNavigation();
         toValue: 2,
         duration: 1000,
         useNativeDriver: true,
-      }).start(() => {
-        navigation.navigate('Signup'); 
       });
     });
+    handleNavigation();
   }, []);
 
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require("../images/gogo.png")}
+        source={require('../images/gogo.png')}
         style={[
           styles.logo,
           {

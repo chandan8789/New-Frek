@@ -9,15 +9,33 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
-import { useNavigation } from '@react-navigation/native';
-
+import React, {useState, useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import mobile_siteConfig from '../service/mobile-site-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Profile = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isNotification, setNotification] = useState(false);
+  const [userData, setUserData] = useState('');
+
+  useEffect(() => {
+    // console.log(mobile_siteConfig.MOB_ACCESS_TOKEN_KEY);
+
+    const getUserDetails = async () => {
+      let value = await AsyncStorage.getItem(mobile_siteConfig.USER_DETAIL);
+
+      if (value !== null) {
+        console.log('value::::::::::', value);
+        setUserData(JSON.parse(value));
+      }
+    };
+    getUserDetails();
+  }, []);
+
+  const navigation = useNavigation();
 
   const toggleDarkMode = () => {
     setIsDarkMode(previousState => !previousState);
@@ -26,11 +44,12 @@ const Profile = () => {
     setNotification(previousState => !previousState);
   };
 
-  const navigation=useNavigation()
-  const backToHome=()=>{
-    navigation.navigate('Header')
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem(mobile_siteConfig.MOB_ACCESS_TOKEN_KEY);
+    await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'FALSE');
 
-  }
+    navigation.replace('Login');
+  };
 
   const ProfileComponent = ({img1, dis, name, img2, onToggle}) => {
     return (
@@ -64,11 +83,10 @@ const Profile = () => {
 
   return (
     <>
-
       <ScrollView>
         <View style={styles.header}>
-          <TouchableOpacity onPress={backToHome}>
-          <Image source={require('../images/left-arrow.png')} />
+          <TouchableOpacity onPress={() => navigation.navigate('Header')}>
+            <Image source={require('../images/left-arrow.png')} />
           </TouchableOpacity>
           <Image
             source={require('../images/profileImage.png')}
@@ -76,7 +94,7 @@ const Profile = () => {
           />
           <View style={styles.heaerTextContener}>
             <Text style={styles.upperTextView}>Welcome Back</Text>
-            <Text style={styles.profileNameTextView}>Alina Saline</Text>
+            <Text style={styles.profileNameTextView}>{userData?.name}</Text>
           </View>
         </View>
         {/* <ScrollView> */}
@@ -101,13 +119,13 @@ const Profile = () => {
           <ProfileComponent
             img1={require('../images/profileName.png')}
             dis={'Name'}
-            name={'Alina Saline'}
+            name={userData?.name}
             img2={require('../images/rightarrow.png')}
           />
           <ProfileComponent
             img1={require('../images/messageProfile.png')}
             dis={'Email'}
-            name={'alinasaline@gmail.com'}
+            name={userData?.email}
             img2={require('../images/rightarrow.png')}
           />
           <ProfileComponent
@@ -152,13 +170,14 @@ const Profile = () => {
             img1={require('../images/delete.png')}
             dis={'Delete Account'}
           />
-          <ProfileComponent
-            img1={require('../images/logout.png')}
-            dis={'LogOut'}
-          />
+          <TouchableOpacity onPress={handleLogout}>
+            <ProfileComponent
+              img1={require('../images/logout.png')}
+              dis={'LogOut'}
+            />
+          </TouchableOpacity>
         </View>
       </ScrollView>
-      {/* </ScrollView> */}
     </>
   );
 };
@@ -174,15 +193,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    height:120
+    height: 120,
   },
   bodyContener: {
     paddingBottom: windowHeight * 0.0,
-    marginBottom: windowHeight * 0.1, 
+    marginBottom: windowHeight * 0.1,
   },
   profileImage: {
     marginLeft: '10%',
-    
+
     height: 50,
     width: 50,
   },

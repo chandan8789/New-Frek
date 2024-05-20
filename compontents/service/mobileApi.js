@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import mobile_siteConfig from './mobile-site-config';
 
 export async function postData(data, urlPath) {
+  // console.log('hello 0');
   return new Promise((resolve, reject) => {
     fetch(mobile_siteConfig.BASE_URL + urlPath, {
       method: 'POST',
@@ -14,14 +15,18 @@ export async function postData(data, urlPath) {
     })
       .then(response => response.json())
       .then(json => {
+        // console.log('hello 1');
         if (json.response) {
+          // console.log('hello 2');
           return resolve(json.response);
         } else {
+          // console.log('hello 3');
           return resolve(json);
         }
       })
       .catch(error => {
         console.log(`=== ERROR === ${urlPath}`, error);
+        console.log('hello 4');
         reject(error);
       });
   });

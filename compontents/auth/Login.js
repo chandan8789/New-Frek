@@ -6,27 +6,31 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ScrollView,
   ImageBackground,
   Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import axios from 'axios';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postData} from '../service/mobileApi';
+import {postData} from '../service/mobileApi'; // Ensure this is correctly imported
 import mobile_siteConfig from '../service/mobile-site-config';
+import {useNavigation} from '@react-navigation/native';
 
-const Login = ({navigation}) => {
+const Login = () => {
   const [email, setEmail] = useState('sujeet@gmail.com');
   const [password, setPassword] = useState('8789');
 
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+
+  const navigation = useNavigation();
+
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Fill the require field');
+      Alert.alert('Error', 'Fill the required fields');
       return;
     }
 
@@ -36,23 +40,29 @@ const Login = ({navigation}) => {
     };
 
     try {
+      console.log('handleLogin request:', request);
       const res = await postData(request, mobile_siteConfig.login);
 
-      console.log('handleLogin', res);
+      console.log('handleLogin response:', res);
 
       if (res?.message === 'Logged in successfully') {
         await AsyncStorage.setItem(
           mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
           res?.token,
         );
+        var userDetail = JSON.stringify(res?.user);
+        await AsyncStorage.setItem(mobile_siteConfig.USER_DETAIL, userDetail);
+        await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'TRUE');
+
         Alert.alert('Success', 'Logged in Successfully');
         navigation.navigate('Header');
+
         return;
       } else {
         Alert.alert('Error', res?.message || 'Login failed');
       }
     } catch (error) {
-      console.log('error:::::::', error);
+      console.log('Login error:', error);
       Alert.alert('Error', 'An error occurred. Please try again later.');
     }
   };
@@ -62,16 +72,14 @@ const Login = ({navigation}) => {
       source={require('../images/background.jpg')}
       style={styles.backgroundImage}>
       <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flex: 1,
-          backgroundColor: '#000000aa',
-        }}>
+        style={{backgroundColor: '#000000aa'}}
+        keyboardShouldPersistTaps={'always'}>
         <View style={styles.container}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View>
               <Text style={styles.welcomeBack}>Welcome Back,</Text>
               <Text style={styles.titlelgoin}>You have been Missed</Text>
-              <Text style={styles.titlelgoin}>Login Your Account</Text>
+              <Text style={styles.titlelgoin}>Login to Your Account</Text>
             </View>
             <View>
               <Image
@@ -179,5 +187,3 @@ const styles = StyleSheet.create({
     height: heightPercentageToDP('100%'),
   },
 });
-
-// keyboardShouldPersistTaps={"always"}

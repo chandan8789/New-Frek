@@ -13,6 +13,9 @@ import LiveHeader from './compontents/pages/LiveHeader';
 import TopBarNavigator from './compontents/Navigator/TopBarNavigation';
 import Question from './compontents/auth/Question';
 import LogoComponent from './compontents/pages/LogoComponent';
+import AudiencePage from './compontents/stream/screen/AudiancePage';
+import HomePage from './compontents/stream/screen/HomePage';
+import HostPage from './compontents/stream/screen/HostPage';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +26,7 @@ const App = () => {
         <Stack.Screen name="LogoComponent" component={LogoComponent} />
 
         <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Question" component={Question} />
         <Stack.Screen name="Login" component={Login} />
 
         <Stack.Screen name="Header" component={Header} />
@@ -39,9 +43,11 @@ const App = () => {
 
         <Stack.Screen name="live-header" component={LiveHeader} />
 
-        <Stack.Screen name="Question" component={Question} />
-
         <Stack.Screen name="topBar-Navigation" component={TopBarNavigator} />
+
+        <Stack.Screen name="Audiance" component={AudiencePage} />
+        <Stack.Screen name="Home-Page" component={HomePage} />
+        <Stack.Screen name="Host" component={HostPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

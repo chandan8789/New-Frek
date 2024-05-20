@@ -114,31 +114,31 @@ const Question = () => {
     },
   ]);
 
-  const submitUserResponseToQuestion = () => {
-    let req = {
-      questions: question,
-    };
+  // const submitUserResponseToQuestion = () => {
+  //   let req = {
+  //     questions: question,
+  //   };
 
-    console.log('req::::::::::::::::2', req);
+  //   console.log('req::::::::::::::::2', req);
 
-    PutDataWithToken(req, mobile_siteConfig.question)
-      .then(res => {
-        console.log('submitUserResponseToQuestion:::::', res);
-      })
-      .catch(error => {
-        console.log('error:::::::', error);
-      });
-  };
+  //   PutDataWithToken(req, mobile_siteConfig.question)
+  //     .then(res => {
+  //       console.log('submitUserResponseToQuestion:::::', res);
+  //     })
+  //     .catch(error => {
+  //       console.log('error:::::::', error);
+  //     });
+  // };
 
   const navigation = useNavigation();
 
-  const updateAnswer = (index, val) => {
-    setQuestion(prevData => {
-      const newData = [...prevData];
-      newData[index].answer = val;
-      return newData;
-    });
-  };
+  // const updateAnswer = (index, val) => {
+  //   setQuestion(prevData => {
+  //     const newData = [...prevData];
+  //     newData[index].answer = val;
+  //     return newData;
+  //   });
+  // };
 
   return (
     <ImageBackground
@@ -174,7 +174,8 @@ const Question = () => {
             <TouchableOpacity style={styles.button}>
               <Text
                 style={styles.buttonText}
-                onPress={() => submitUserResponseToQuestion()}>
+                // onPress={() => submitUserResponseToQuestion()}
+                onPress={navigation.navigate('Login')}>
                 Submit
               </Text>
             </TouchableOpacity>

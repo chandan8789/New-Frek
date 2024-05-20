@@ -11,3 +11,4 @@
 
 
 -keep class **.zego.**  { *; }
+
