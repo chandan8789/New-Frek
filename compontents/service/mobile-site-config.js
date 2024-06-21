@@ -3,7 +3,8 @@ const mobile_siteConfig = Object.freeze({
   USER_DETAIL: 'userDetail',
   IS_LOGIN: 'FALSE',
 
-  BASE_URL: 'http://10.0.2.2:4000/',
+  // BASE_URL: 'http://10.0.2.2:4000/',
+  BASE_URL: 'http://45.61.60.89:3000/',
 
   // auth
   signup: 'auth/signup',

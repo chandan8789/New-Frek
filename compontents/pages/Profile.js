@@ -13,8 +13,10 @@ import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import mobile_siteConfig from '../service/mobile-site-config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {heightPercentageToDP} from 'react-native-responsive-screen';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+const {width} = Dimensions.get('window');
 
 const Profile = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -88,14 +90,14 @@ const Profile = () => {
           <TouchableOpacity onPress={() => navigation.navigate('Header')}>
             <Image source={require('../images/left-arrow.png')} />
           </TouchableOpacity>
-          <Image
-            source={require('../images/profileImage.png')}
-            style={styles.profileImage}
-          />
+          <Image source={{uri: userData?.avatar}} style={styles.profileImage} />
           <View style={styles.heaerTextContener}>
             <Text style={styles.upperTextView}>Welcome Back</Text>
             <Text style={styles.profileNameTextView}>{userData?.name}</Text>
           </View>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.texts}>edit</Text>
+          </TouchableOpacity>
         </View>
         {/* <ScrollView> */}
         <View style={styles.bodyContener}>
@@ -200,10 +202,10 @@ const styles = StyleSheet.create({
     marginBottom: windowHeight * 0.1,
   },
   profileImage: {
+    borderRadius: (width * 0.2) / 2,
+    height: 55,
+    width: 55,
     marginLeft: '10%',
-
-    height: 50,
-    width: 50,
   },
   heaerTextContener: {
     marginLeft: '5%',
@@ -254,5 +256,14 @@ const styles = StyleSheet.create({
     marginLeft: 14,
     color: 'black',
     fontWeight: '500',
+  },
+  button: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    padding: width * 0.025, // 2.5% of screen width
+    marginLeft: width * 0.1, // 10% of screen width
+  },
+  texts: {
+    color: 'black',
   },
 });

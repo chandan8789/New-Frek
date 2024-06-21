@@ -6,9 +6,11 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import mobile_siteConfig from '../service/mobile-site-config';
 
 const {width} = Dimensions.get('window');
 
@@ -48,30 +50,32 @@ const ExtraActivity = ({img, msg, rs, bp}) => {
   );
 };
 
-const About = () => {
-  const navigation = useNavigation();
-
-  const backToAboutPage=()=>{
-    navigation.navigate('Header')
-  }
+const About = ({navigation}) => {
+  const [userName, setUserName] = useState('');
+  useEffect(() => {
+    const userDetails = async () => {
+      let value = await AsyncStorage.getItem(mobile_siteConfig.USER_DETAIL);
+      if (value != null) {
+        setUserName(JSON.parse(value));
+      }
+    };
+    userDetails();
+  }, []);
 
   return (
     <>
       <ScrollView style={styles.container}>
         <View style={styles.rowContainer}>
-          <TouchableOpacity onPress={backToAboutPage}>
+          <TouchableOpacity onPress={() => navigation.navigate('Header')}>
             <Image
               source={require('../images/left-arrow.png')}
               style={styles.icon}
             />
           </TouchableOpacity>
-          <Image
-            source={require('../images/profileImage.png')}
-            style={styles.profileImage}
-          />
+          <Image source={{uri: userName?.avatar}} style={styles.profileImage} />
           <View style={styles.profileText}>
             <Text style={styles.welcomeText}>Welcome Back,</Text>
-            <Text style={styles.userName}>John Smith</Text>
+            <Text style={styles.userName}>{userName?.name}</Text>
           </View>
           <Image
             source={require('../images/dots-vertical.png')}
@@ -80,7 +84,7 @@ const About = () => {
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.avatarImagesContainer}>
-            {[...Array(50)].map((_, index) => (
+            {[...Array(20)].map((_, index) => (
               <SquareMember key={index} />
             ))}
           </View>
@@ -172,10 +176,10 @@ const styles = StyleSheet.create({
   squareMemberContainer: {
     marginRight: width * 0.03,
   },
-    squareMemberImage: {
-      height:53,
-      width:53
-    },
+  squareMemberImage: {
+    height: 53,
+    width: 53,
+  },
   bioContainer: {
     marginTop: width * 0.02,
   },

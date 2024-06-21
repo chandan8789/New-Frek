@@ -41,10 +41,7 @@ const Header = () => {
         <View style={styles.topHeader}>
           <View style={styles.userInfo}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Image
-                source={require('../images/profileImage.png')}
-                style={styles.avatar}
-              />
+              <Image source={{uri: userData?.avatar}} style={styles.avatar} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomHeader}>Welcome Back,</Text>
@@ -93,6 +90,7 @@ const styles = StyleSheet.create({
   avatar: {
     height: heightPercentageToDP('7%'),
     width: widthPercentageToDP('14%'),
+    borderRadius: heightPercentageToDP(50),
   },
   textContainer: {
     marginLeft: width * 0.04,

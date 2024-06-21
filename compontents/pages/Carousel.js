@@ -9,158 +9,22 @@ import {
 import React, {useEffect, useState} from 'react';
 import Carousel from 'react-native-snap-carousel';
 import Footer from './Footer';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {State, TapGestureHandler} from 'react-native-gesture-handler';
+import {useIsFocused} from '@react-navigation/native';
 import {getData} from '../service/mobileApi';
 import mobile_siteConfig from '../service/mobile-site-config';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
-const ITEM_WIDTH = SLIDER_WIDTH * 0.7;
-
-const sliderImage = [
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1668469739030-007d6b74d82e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1576940769468-696956ae420f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker1',
-    age: '24',
-  },
-
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1646411907458-36113d333a82?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1661508769773-20d55ab42b9c?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1668469739030-007d6b74d82e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1576940769468-696956ae420f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1646411907458-36113d333a82?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1661508769773-20d55ab42b9c?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1668469739030-007d6b74d82e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1576940769468-696956ae420f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1646411907458-36113d333a82?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1661508769773-20d55ab42b9c?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1668469739030-007d6b74d82e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1576940769468-696956ae420f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1646411907458-36113d333a82?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1661508769773-20d55ab42b9c?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1668469739030-007d6b74d82e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1576940769468-696956ae420f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cmVlbHMlMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://images.unsplash.com/photo-1646411907458-36113d333a82?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-  {
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1661508769773-20d55ab42b9c?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Picker',
-    age: '26',
-  },
-];
+const ITEM_WIDTH = SLIDER_WIDTH * 0.8;
 
 function carouselCardItem({item, index}) {
   return (
     <View style={styles.cardCarousel} key={index}>
       <TouchableOpacity onPress={() => {}}>
-        <Image style={styles.images} source={{uri: item?.imgUrl}} />
+        <Image style={styles.images} source={{uri: item?.avatar}} />
       </TouchableOpacity>
-      <View
-        style={{
-          flexDirection: 'row',
-
-          justifyContent: 'center',
-          gap: 5,
-        }}>
-        <Text style={styles.Adventures}>
-          {item?.name !== undefined && item?.name}
-        </Text>
-        <Text style={styles.Adventures}>
-          ({item?.age !== undefined && item?.age})
-        </Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.Adventures}>{item?.name}</Text>
+        <Text style={styles.Adventures}>({item?.age})</Text>
       </View>
     </View>
   );
@@ -168,32 +32,35 @@ function carouselCardItem({item, index}) {
 
 const CarouselComponent = () => {
   const isFocused = useIsFocused();
+  const [data, setData] = useState([]);
 
-  // api call
-  const [data, setData] = useState('');
-
-  const userName = async () => {
-    const res = await getData(mobile_siteConfig.carousel);
-    console.log('ressssspppp', res);
-    setData(res.data);
+  const fetchData = async () => {
+    try {
+      const res = await getData(mobile_siteConfig.carousel);
+      console.log('Response:', res);
+      if (res?.feed) {
+        setData(res.feed);
+      } else {
+        console.error('Invalid response structure:', res);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   useEffect(() => {
-    userName();
+    fetchData();
   }, [isFocused]);
 
   return (
-    <>
-      <View style={styles.container}>
-        <Carousel
-          // data={data}
-          data={sliderImage}
-          renderItem={carouselCardItem}
-          sliderWidth={SLIDER_WIDTH}
-          itemWidth={ITEM_WIDTH}
-        />
-      </View>
-    </>
+    <View style={styles.container}>
+      <Carousel
+        data={data}
+        renderItem={carouselCardItem}
+        sliderWidth={SLIDER_WIDTH}
+        itemWidth={ITEM_WIDTH}
+      />
+    </View>
   );
 };
 
@@ -210,6 +77,11 @@ const styles = StyleSheet.create({
     height: 400,
     borderRadius: 10,
     marginTop: 20,
+  },
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 5,
   },
   Adventures: {
     textAlign: 'center',

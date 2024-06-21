@@ -20,11 +20,8 @@ import mobile_siteConfig from '../service/mobile-site-config';
 import {useNavigation} from '@react-navigation/native';
 
 const Login = () => {
-  const [email, setEmail] = useState('sujeet@gmail.com');
-  const [password, setPassword] = useState('8789');
-
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
 

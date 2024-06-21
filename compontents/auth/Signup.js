@@ -52,6 +52,7 @@ const Signup = ({navigation}) => {
     let request = {
       name: name,
       email: email,
+      // dob: moment(dob).format('DD/MM/YYYY'),
       dob: dob,
       gender: selectedValue,
       password: password,
@@ -69,7 +70,7 @@ const Signup = ({navigation}) => {
         );
         Alert.alert('Success', 'Signup successfully');
         navigation.navigate('Question');
-        // await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'TRUE');
+        await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'TRUE');
       } else if (res?.message === 'User already exists') {
         Alert.alert('Error', 'User already exists');
       } else {
