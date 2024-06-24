@@ -39,6 +39,7 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-tab-view": "^3.5.2",
+    "socket.io-client": "^4.7.5",
     "zego-express-engine-reactnative": "^3.2.0"
   },
   "devDependencies": {

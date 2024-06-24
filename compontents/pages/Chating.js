@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,8 +12,10 @@ import {
   TextInput,
 } from 'react-native';
 import mobile_siteConfig from '../service/mobile-site-config';
+import socketServcies from '../userInfoMapperSocket';
+import { postDataWithToken } from '../service/mobileApi';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const Sender = () => {
   return (
@@ -39,18 +41,96 @@ const Sender = () => {
   );
 };
 
-const Chating = ({navigation}) => {
+const Chating = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const [userDetails, setUserDetails] = useState('');
+
+
+  const [userData, setUserData] = useState([]);//logged in user data
+  const [otherProfile, setOtherProfile] = useState([]);
+
+  const [chatMetaData, setChatMetaData] = useState([]);
+  const [isGroupChat, setIsGroupChat] = useState(false);
+  const [routeDatax, setRouteDatax] = useState([]);
+  const [allConversations, setAllConversations] = useState([]);
+  const [conversatation, setConversatation] = useState([]);
+
+
+  // modal
+  const [loading, setLoading] = useState(false);
+  const scrollEnd = useRef();
+  const [sendMessage, setSendMessage] = useState('');
+  const [newMessage, setNewMessage] = useState([]);//incoming message from socket
+  // new chat
+  const [newChatData, setNewChatData] = useState([]);
 
   useEffect(() => {
     const getUserDetails = async () => {
       const value = await AsyncStorage.getItem(mobile_siteConfig.USER_DETAIL);
       if (value !== null) {
+        console.log('value::::::::::', value);
         setUserDetails(JSON.parse(value));
       }
     };
     getUserDetails();
   }, []);
+
+
+
+  // sokcet 
+  useEffect(() => {
+    socketServcies.initializeSocket()
+  }, [isFocused])
+
+  // chat
+  // updating incoming stock data from socket
+  useEffect(() => {
+    socketServcies.on('newMessage', (msg: any) => {
+      console.log('new chat Message', msg);
+      setNewMessage(msg)
+    });
+  }, []);
+
+  // apis
+  const sendChat = () => {
+    let req = {
+      'message': sendMessage
+    }
+    // let url = `${mobile_siteConfig.sendMessage}${otherProfile?.id}`
+    let url = `${mobile_siteConfig.sendMessage}${'66795a3531c9d29edf3d08fe'}`
+    console.log('sending chat to ::', url)
+    postDataWithToken(req, url)
+      .then((r) => {
+        console.log('resp::', r)
+        if (r?.message === "Message sent") {
+          setSendMessage('');
+        }
+      })
+      .catch((error) => {
+        // Handle error
+        console.error('Error:', error);
+      });
+  }
+
+
+  //get all chat by user id::::--
+  const getAllChat = (id) => {
+    console.log('id to get chats', id)
+    postDataWithToken({}, `message/conversation/${id}`)
+      .then((r) => {
+        console.log(' getAllChatby id ==============================resp::', r)
+        if (r?.message === 'No conversation found') {
+          setConversatation([]);
+        } else {
+          setConversatation(r?.conversation?.messages);
+          setChatMetaData(r?.conversation);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
 
   return (
     <>
@@ -73,19 +153,23 @@ const Chating = ({navigation}) => {
       </ScrollView>
 
       <View style={styles.typeChatContener}>
+
         <View style={styles.InputInnerSideCContener}>
           <Image source={require('../images/attachment.png')} />
           <TextInput
-            style={{color: 'black'}}
+            style={{ color: 'black' }}
             placeholder="Type your message"
             placeholderTextColor="gray"
           />
           <Image
             source={require('../images/Vector123.png')}
-            style={{marginLeft: '40%'}}
+            style={{ marginLeft: '40%' }}
           />
         </View>
-        <Image source={require('../images/Subtract.png')} />
+
+        <TouchableOpacity onPress={() => { sendChat() }}>
+          <Image source={require('../images/Subtract.png')} />
+        </TouchableOpacity>
       </View>
     </>
   );

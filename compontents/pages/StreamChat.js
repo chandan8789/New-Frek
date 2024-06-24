@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,8 +10,10 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import mobile_siteConfig from '../service/mobile-site-config';
+import { getDataWithToken } from '../service/mobileApi';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const itemWidth = width * 0.88;
 
 const AvatarImages = () => {
@@ -32,7 +34,7 @@ const AvatarImages = () => {
   );
 };
 
-const ChatsWithPerson = ({onPress}) => {
+const ChatsWithPerson = ({ onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.chatContainer}>
@@ -59,8 +61,19 @@ const ChatsWithPerson = ({onPress}) => {
   );
 };
 
+// main
 const StreamChat = () => {
   const navigation = useNavigation();
+
+  // loader
+  const [isLoading, setIsLoading] = useState(false)
+  // chat
+  const [allConversatation, setAllConversatation] = useState([]);
+  const [allConversatationSnap, setAllConversatationSnap] = useState([]);
+  const [conversatation, setConversatation] = useState([]);
+  const [userData, setUserData] = useState([]);
+
+
 
   const handleGoToChating = () => {
     navigation.navigate('Chating');
@@ -70,9 +83,85 @@ const StreamChat = () => {
     navigation.navigate('Header');
   };
 
+
+  const filterConversations = (text) => {
+    // if (allConversatationSnap) {
+    //     const filtered = allConversatationSnap?.conversations?.filter(conversation =>
+    //         conversation?.participants.some(participant =>
+    //             participant?.user?.username.toLowerCase().includes(text.toLowerCase())
+    //         )
+    //     );
+    //     // setAllConversatation(filtered);
+    //     console.log('filtered::', filtered)
+    // }
+  };
+
+  // useEffect(() => {
+  //   filterConversations(searchVal)
+  // }, [searchVal])
+
+  // apis -- verified
+  const getAllConversations = () => {
+    getDataWithToken({}, mobile_siteConfig.getAllConversations)
+      .then((r: any) => r.json())
+      .then((r: any) => {
+        if (r?.hasOwnProperty('conversations')) {
+          setIsLoading(false);
+          let abc = r?.conversations;
+          abc.sort(function (a, b) {
+            return new Date(b.updated_at) - new Date(a.updated_at);
+          });
+          // all conversation
+          console.log('all conversation::', abc)
+          setAllConversatation(abc);
+          setAllConversatationSnap(abc)
+        } else {
+          console.log("The key 'conversations' does not exist.");
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (err instanceof Error) {
+          console.error("getAllConversations Error: " + err.message);
+          setIsLoading(false);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getAllConversations();
+  }, [])
+
+  // removing self id from all conversatation to show the user logo in chat home page
+  useEffect(() => {
+    var mod = allConversatation;
+    if (mod) {
+      mod?.forEach(conversation => {
+        conversation.participants = conversation.participants?.filter(participant => Number(participant.user.id) !== Number(userData?.id));
+      });
+      setConversatation(mod)
+    }
+  }, [allConversatation])
+
+  function dateToFromNowDaily(myDate) {
+    // console.log('fjahsfjafjaf', myDate)
+    var fromNow = moment(myDate).format('ll');
+    return moment(myDate).calendar(null, {
+      lastWeek: 'ddd,',
+      lastDay: '[Yesterday,]',
+      sameDay: '[Today,]',
+
+      // when the date is further away, use from-now functionality             
+      sameElse: function () {
+        return "[" + fromNow + "]";
+      }
+    });
+  }
+
+
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row', paddingVertical: 30}}>
+      <View style={{ flexDirection: 'row', paddingVertical: 30 }}>
         <TouchableOpacity onPress={backToHomePage}>
           <Image source={require('../images/left-arrow.png')} />
         </TouchableOpacity>
@@ -116,7 +205,10 @@ const StreamChat = () => {
       <ScrollView>
         <View>
           {[...Array(200)].map((_, index) => (
-            <ChatsWithPerson key={index} onPress={handleGoToChating} />
+            <ChatsWithPerson
+              key={index}
+              onPress={handleGoToChating}
+            />
           ))}
         </View>
       </ScrollView>
