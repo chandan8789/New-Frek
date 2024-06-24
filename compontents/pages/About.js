@@ -11,8 +11,11 @@ import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import mobile_siteConfig from '../service/mobile-site-config';
+import {heightPercentageToDP} from 'react-native-responsive-screen';
 
 const {width} = Dimensions.get('window');
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const SquareMember = () => {
   return (
@@ -27,9 +30,11 @@ const SquareMember = () => {
 
 const CommonContent = ({location}) => {
   return (
-    <View style={styles.commonContentContainer}>
-      <Text style={styles.locations}>{location}</Text>
-    </View>
+    <TouchableOpacity>
+      <View style={styles.commonContentContainer}>
+        <Text style={styles.locations}>{location}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -65,72 +70,69 @@ const About = ({navigation}) => {
   return (
     <>
       <ScrollView style={styles.container}>
-        <View style={styles.rowContainer}>
+        <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.navigate('Header')}>
-            <Image
-              source={require('../images/left-arrow.png')}
-              style={styles.icon}
-            />
+            <Image source={require('../images/left-arrow.png')} />
           </TouchableOpacity>
           <Image source={{uri: userName?.avatar}} style={styles.profileImage} />
-          <View style={styles.profileText}>
-            <Text style={styles.welcomeText}>Welcome Back,</Text>
-            <Text style={styles.userName}>{userName?.name}</Text>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.upperTextView}>Welcome Back</Text>
+            <Text style={styles.profileNameTextView}>{userName?.name}</Text>
           </View>
-          <Image
-            source={require('../images/dots-vertical.png')}
-            style={styles.icon}
-          />
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.avatarImagesContainer}>
-            {[...Array(20)].map((_, index) => (
-              <SquareMember key={index} />
-            ))}
+        <View
+          style={{paddingHorizontal: 20, paddingVertical: 20, marginTop: 20}}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.avatarImagesContainer}>
+              {[...Array(20)].map((_, index) => (
+                <SquareMember key={index} />
+              ))}
+            </View>
+          </ScrollView>
+          <View style={styles.bioContainer}>
+            <Text style={styles.bioTitle}>Bio</Text>
+            <Text style={styles.bioText}>
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text
+              ever since the 1500s, when an unknown printer took a galley of
+              type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into
+              electronic typesetting, remaining essentially unchanged.
+            </Text>
           </View>
-        </ScrollView>
-        <View style={styles.bioContainer}>
-          <Text style={styles.bioTitle}>Bio</Text>
-          <Text style={styles.bioText}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged.
+          <View style={styles.commonContainer}>
+            <Text style={styles.commonTitle}>Common</Text>
+            <View style={styles.commonContent}>
+              <CommonContent location={'Location'} />
+              <CommonContent location={'New York'} />
+            </View>
+          </View>
+        </View>
+        <View style={{paddingHorizontal: 20}}>
+          <Text
+            style={{
+              fontSize: 20,
+              color: 'black',
+              fontWeight: '500',
+              marginTop: 20,
+            }}>
+            Extra Activity
           </Text>
-        </View>
-        <View style={styles.commonContainer}>
-          <Text style={styles.commonTitle}>Common</Text>
-          <View style={styles.commonContent}>
-            <CommonContent location={'Location'} />
-            <CommonContent location={'New York'} />
-          </View>
-        </View>
 
-        <Text
-          style={{
-            fontSize: 20,
-            color: 'black',
-            fontWeight: '500',
-            marginTop: 30,
-          }}>
-          Extra Activity
-        </Text>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={{flexDirection: 'row'}}>
-            {[...Array(10)].map((_, index) => (
-              <ExtraActivity
-                img={require('../images/red-heart.png')}
-                msg={'Heart rate'}
-                rs={'120'}
-                bp={'BPM'}
-                key={index}
-              />
-            ))}
-          </View>
-        </ScrollView>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={{flexDirection: 'row'}}>
+              {[...Array(10)].map((_, index) => (
+                <ExtraActivity
+                  img={require('../images/red-heart.png')}
+                  msg={'Heart rate'}
+                  rs={'120'}
+                  bp={'BPM'}
+                  key={index}
+                />
+              ))}
+            </View>
+          </ScrollView>
+        </View>
       </ScrollView>
     </>
   );
@@ -140,13 +142,43 @@ export default About;
 
 const styles = StyleSheet.create({
   container: {
-    padding: width * 0.05,
+    flex: 1,
   },
-  rowContainer: {
+  header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: '100%',
+    backgroundColor: 'white',
     alignItems: 'center',
+    padding: 10,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    height: 150,
+    paddingHorizontal: 30,
+    gap: 10,
   },
+  bodyContainer: {
+    paddingBottom: windowHeight * 0.0,
+    marginBottom: windowHeight * 0.1,
+  },
+  profileImage: {
+    borderRadius: (width * 0.2) / 2,
+    height: 55,
+    width: 55,
+  },
+  headerTextContainer: {
+    marginLeft: '5%',
+  },
+  upperTextView: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  profileNameTextView: {
+    color: 'black',
+    fontWeight: '600',
+    fontSize: 20,
+  },
+
   icon: {
     height: width * 0.07,
     width: width * 0.07,
@@ -171,7 +203,6 @@ const styles = StyleSheet.create({
   },
   avatarImagesContainer: {
     flexDirection: 'row',
-    paddingVertical: width * 0.1,
   },
   squareMemberContainer: {
     marginRight: width * 0.03,

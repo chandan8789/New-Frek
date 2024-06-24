@@ -20,7 +20,7 @@ const LogoComponent = () => {
     if (val !== null && isLogin == 'TRUE') {
       navigation.navigate('Header');
     } else {
-      navigation.navigate('Login');
+      navigation.navigate('Signup');
     }
   };
 

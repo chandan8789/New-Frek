@@ -14,7 +14,7 @@ import {getData} from '../service/mobileApi';
 import mobile_siteConfig from '../service/mobile-site-config';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
-const ITEM_WIDTH = SLIDER_WIDTH * 0.8;
+const ITEM_WIDTH = SLIDER_WIDTH * 0.7;
 
 function carouselCardItem({item, index}) {
   return (
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     width: ITEM_WIDTH,
   },
   images: {
-    height: 400,
+    height: '85%',
     borderRadius: 10,
     marginTop: 20,
   },
@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontWeight: '500',
-    marginTop: 10,
     color: 'black',
   },
 });

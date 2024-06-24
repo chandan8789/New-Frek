@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
-import {Picker} from '@react-native-picker/picker';
+// import {Picker} from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
 import mobile_siteConfig from '../service/mobile-site-config';
@@ -114,31 +114,31 @@ const Question = () => {
     },
   ]);
 
-  // const submitUserResponseToQuestion = () => {
-  //   let req = {
-  //     questions: question,
-  //   };
+  const submitUserResponseToQuestion = () => {
+    let req = {
+      questions: question,
+    };
 
-  //   console.log('req::::::::::::::::2', req);
+    console.log('req::::::::::::::::2', req);
 
-  //   PutDataWithToken(req, mobile_siteConfig.question)
-  //     .then(res => {
-  //       console.log('submitUserResponseToQuestion:::::', res);
-  //     })
-  //     .catch(error => {
-  //       console.log('error:::::::', error);
-  //     });
-  // };
+    PutDataWithToken(req, mobile_siteConfig.question)
+      .then(res => {
+        console.log('submitUserResponseToQuestion:::::', res);
+      })
+      .catch(error => {
+        console.log('error:::::::', error);
+      });
+  };
 
   const navigation = useNavigation();
 
-  // const updateAnswer = (index, val) => {
-  //   setQuestion(prevData => {
-  //     const newData = [...prevData];
-  //     newData[index].answer = val;
-  //     return newData;
-  //   });
-  // };
+  const updateAnswer = (index, val) => {
+    setQuestion(prevData => {
+      const newData = [...prevData];
+      newData[index].answer = val;
+      return newData;
+    });
+  };
 
   return (
     <ImageBackground

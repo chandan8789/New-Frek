@@ -6,17 +6,29 @@ import ForYou from './pages/ForYou';
 import Trending from './pages/Trending';
 import NearBy from './pages/NearBy';
 import Favorites from './pages/Favorites';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 function TopBarNavigation() {
-    const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator();
   return (
     <Tab.Navigator
       initialRouteName="For You"
-      tabBarOptions={{
-        activeTintColor: 'black',
-        labelStyle: {fontSize: 13, fontWeight:"bold"},
-        style: {backgroundColor: 'white'},
+      screenOptions={{
+        tabBarActiveTintColor: 'black',
+        tabBarLabelStyle: {
+          fontSize: wp('3%'),
+          fontWeight: 'bold',
+        },
+        tabBarStyle: {
+          backgroundColor: 'white',
+          paddingTop: hp('5%'),
+        },
+        tabBarItemStyle: {
+          minWidth: wp('25%'),
+        },
       }}>
       <Tab.Screen
         name="for-you"

@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  StatusBar,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Carousel from '../pages/Carousel';
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +32,7 @@ const Header = () => {
       let value2 = await AsyncStorage.getItem(
         mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
       );
+
       console.log('ppppppppppppppppppppp', value1, value2);
 
       if (value !== null) {
@@ -37,6 +45,11 @@ const Header = () => {
 
   return (
     <>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <View style={styles.container}>
         <View style={styles.topHeader}>
           <View style={styles.userInfo}>
@@ -78,8 +91,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
     width: '100%',
-    paddingVertical: height * 0.03, // 3% of screen height
-    paddingHorizontal: width * 0.05, // 5% of screen width
+    paddingVertical: height * 0.06,
+    paddingHorizontal: width * 0.06,
     borderBottomEndRadius: 50,
     borderBottomStartRadius: 50,
   },
@@ -88,8 +101,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatar: {
-    height: heightPercentageToDP('7%'),
-    width: widthPercentageToDP('14%'),
+    height: heightPercentageToDP('6%'),
+    width: widthPercentageToDP('13%'),
     borderRadius: heightPercentageToDP(50),
   },
   textContainer: {

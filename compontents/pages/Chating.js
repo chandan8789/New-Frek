@@ -59,9 +59,9 @@ const Chating = ({navigation}) => {
           <Image source={require('../images/left-arrow.png')} />
         </TouchableOpacity>
         <Text style={styles.headerText}>{userDetails?.name}</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Image source={require('../images/dots-vertical.png')} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <ScrollView>
@@ -94,21 +94,21 @@ const Chating = ({navigation}) => {
 const styles = StyleSheet.create({
   header: {
     width: '100%',
-    height: 60,
+    height: 120,
     backgroundColor: 'white',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   leftArrowContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   headerText: {
+    flex: 1,
     color: 'black',
     fontWeight: '600',
     fontSize: 16,
+    textAlign: 'center',
   },
   container: {
     // flex: 1,

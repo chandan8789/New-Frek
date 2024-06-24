@@ -202,8 +202,8 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    height: heightPercentageToDP('6%'),
-    width: widthPercentageToDP('12%'),
+    height: 50,
+    width: 50,
     marginTop: heightPercentageToDP('1%'),
   },
   highlightsMembers: {

@@ -66,21 +66,29 @@ const StreamChat = () => {
     navigation.navigate('Chating');
   };
 
-  const backToHomePage=()=>{
-    navigation.navigate('Header')
-  }
+  const backToHomePage = () => {
+    navigation.navigate('Header');
+  };
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', paddingVertical: 30}}>
         <TouchableOpacity onPress={backToHomePage}>
-
-        <Image source={require('../images/left-arrow.png')} />
+          <Image source={require('../images/left-arrow.png')} />
         </TouchableOpacity>
-        <Text style={{color: "black", fontWeight: "600", fontSize: 20, textAlign: "center", justifyContent: "center", alignItems: "center", textAlignVertical: "center", flex: 1}}>
-  Stream Chat
-</Text>
-
+        <Text
+          style={{
+            color: 'black',
+            fontWeight: '600',
+            fontSize: 20,
+            textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlignVertical: 'center',
+            flex: 1,
+          }}>
+          Stream Chat
+        </Text>
       </View>
       <View style={styles.inputContainer}>
         <Image
@@ -128,14 +136,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: 10,
     marginBottom: 20,
-    marginTop:10
+    marginTop: 10,
   },
   input: {
     flex: 1,
     fontSize: 18,
     height: 55,
     marginLeft: 5,
-    color:"black"
+    color: 'black',
   },
   searchIcon: {
     width: 20,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,19 +9,20 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  StatusBar,
 } from 'react-native';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
 import {Picker} from '@react-native-picker/picker';
-import axios from 'axios';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import mobile_siteConfig from '../service/mobile-site-config';
-import {postData} from '../service/mobileApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
+
+import {postData} from '../service/mobileApi';
+import mobile_siteConfig from '../service/mobile-site-config';
 
 const Signup = ({navigation}) => {
   const [selectedValue, setSelectedValue] = useState('');
@@ -30,47 +31,63 @@ const Signup = ({navigation}) => {
   const [dob, setDob] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isFirstSignup, setIsFirstSignup] = useState(true);
+
+  useEffect(() => {
+    async function checkSignupStatus() {
+      const isAlreadySignedUp = await AsyncStorage.getItem(
+        mobile_siteConfig.IS_LOGIN,
+      );
+      if (isAlreadySignedUp === 'TRUE') {
+        setIsFirstSignup(false);
+      }
+    }
+    checkSignupStatus();
+  }, []);
 
   const handleSubmit = async () => {
-    if (
-      !name ||
-      !email ||
-      !dob ||
-      !selectedValue ||
-      !password ||
-      !confirmPassword
-    ) {
-      Alert.alert('Error', 'Please fill all the fields');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
-
-    let request = {
-      name: name,
-      email: email,
-      // dob: moment(dob).format('DD/MM/YYYY'),
-      dob: dob,
-      gender: selectedValue,
-      password: password,
-    };
-
     try {
-      const res = await postData(request, mobile_siteConfig.signup);
+      if (
+        !name ||
+        !email ||
+        !dob ||
+        !selectedValue ||
+        !password ||
+        !confirmPassword
+      ) {
+        Alert.alert('Error', 'Please fill all the fields');
+        return;
+      }
 
-      console.log('handleSubmit response:', res);
+      if (password !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match');
+        return;
+      }
+
+      let request = {
+        name: name,
+        email: email,
+        dob: dob,
+        gender: selectedValue,
+        password: password,
+      };
+
+      const res = await postData(request, mobile_siteConfig.signup);
 
       if (res?.message === 'User created successfully') {
         await AsyncStorage.setItem(
           mobile_siteConfig.MOB_ACCESS_TOKEN_KEY,
           res?.token,
         );
-        Alert.alert('Success', 'Signup successfully');
-        navigation.navigate('Question');
-        await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'TRUE');
+        if (isFirstSignup) {
+          Alert.alert('Success', 'Signup successful');
+          await AsyncStorage.setItem(mobile_siteConfig.IS_LOGIN, 'TRUE');
+          setIsFirstSignup(false);
+          navigation.navigate('Question');
+        } else {
+          Alert.alert('Success', 'Signup successful');
+          navigation.navigate('Login');
+        }
       } else if (res?.message === 'User already exists') {
         Alert.alert('Error', 'User already exists');
       } else {
@@ -93,115 +110,117 @@ const Signup = ({navigation}) => {
   };
 
   return (
-    <ImageBackground
-      source={require('../images/background.jpg')}
-      style={styles.backgroundImage}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps={'always'}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={styles.header}>
-              <Text style={styles.welcome}>Welcome,</Text>
-              <Text style={styles.titles}>Enter Your Details to</Text>
-              <Text style={styles.titles}>Create Account</Text>
+    <>
+      <ImageBackground
+        source={require('../images/background.jpg')}
+        style={styles.backgroundImage}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={styles.header}>
+                <Text style={styles.welcome}>Welcome,</Text>
+                <Text style={styles.titles}>Enter Your Details to</Text>
+                <Text style={styles.titles}>Create Account</Text>
+              </View>
+              <View>
+                <Image
+                  source={require('../images/figma.png')}
+                  style={styles.avatar}
+                />
+              </View>
             </View>
-            <View>
-              <Image
-                source={require('../images/figma.png')}
-                style={styles.avatar}
+
+            <View style={styles.inputFields}>
+              <Text style={styles.titleName}>Full Name</Text>
+              <TextInput
+                style={styles.nameField}
+                placeholder="Enter your Name"
+                placeholderTextColor="white"
+                value={name}
+                onChangeText={text => setName(text)}
               />
-            </View>
-          </View>
+              <Text style={styles.titleName}>Email</Text>
+              <TextInput
+                style={styles.nameField}
+                placeholder="Enter your Email"
+                placeholderTextColor="white"
+                value={email}
+                onChangeText={text => setEmail(text)}
+                keyboardType="email-address"
+              />
+              <Text style={styles.titleName}>Date of Birth</Text>
 
-          <View style={styles.inputFields}>
-            <Text style={styles.titleName}>Full Name</Text>
-            <TextInput
-              style={styles.nameField}
-              placeholder="Enter your Name"
-              placeholderTextColor="white"
-              value={name}
-              onChangeText={text => setName(text)}
-            />
-            <Text style={styles.titleName}>Email</Text>
-            <TextInput
-              style={styles.nameField}
-              placeholder="Enter your Email"
-              placeholderTextColor="white"
-              value={email}
-              onChangeText={text => setEmail(text)}
-              keyboardType="email-address"
-            />
-            <Text style={styles.titleName}>Date of Birth</Text>
+              <View style={styles.nameField}>
+                <TouchableOpacity onPress={() => setOpen(true)}>
+                  <Text style={styles.dobText}>
+                    {dob.length === 0 ? 'Enter your DOB' : dob}
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.nameField}>
-              <TouchableOpacity onPress={() => setOpen(true)}>
-                <Text style={styles.dobText}>
-                  {dob.length === 0 ? 'Enter your DOB' : dob}
-                </Text>
+              <DatePicker
+                modal
+                open={open}
+                date={date}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={() => setOpen(false)}
+              />
+
+              <Text style={styles.titleName}>Gender</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={selectedValue}
+                  onValueChange={itemValue => setSelectedValue(itemValue)}
+                  style={styles.picker}>
+                  <Picker.Item label="Select Gender" value="" />
+                  <Picker.Item label="Male" value="Male" />
+                  <Picker.Item label="Female" value="Female" />
+                  <Picker.Item label="Other" value="Other" />
+                </Picker>
+              </View>
+
+              <Text style={styles.titleName}>Password</Text>
+              <TextInput
+                style={styles.nameField}
+                placeholder="Enter your password"
+                placeholderTextColor="white"
+                value={password}
+                onChangeText={text => setPassword(text)}
+                secureTextEntry
+              />
+              <Text style={styles.titleName}>Confirm Password</Text>
+              <TextInput
+                style={styles.nameField}
+                placeholder="Confirm your password"
+                placeholderTextColor="white"
+                value={confirmPassword}
+                onChangeText={text => setConfirmPassword(text)}
+                secureTextEntry
+              />
+              <TouchableOpacity
+                style={styles.signupButton}
+                onPress={handleSubmit}>
+                <Text style={styles.signupButtonText}>Signup</Text>
               </TouchableOpacity>
+
+              <View style={styles.loginLinkContainer}>
+                <Text style={styles.loginText}>Already have an account? </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Text style={styles.loginLink}>Login</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-            <DatePicker
-              modal
-              open={open}
-              date={date}
-              mode="date"
-              onConfirm={handleConfirm}
-              onCancel={() => setOpen(false)}
-            />
-
-            <Text style={styles.titleName}>Gender</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedValue}
-                onValueChange={itemValue => setSelectedValue(itemValue)}
-                style={styles.picker}>
-                <Picker.Item label="Select Gender" value="" />
-                <Picker.Item label="Male" value="Male" />
-                <Picker.Item label="Female" value="Female" />
-                <Picker.Item label="Other" value="Other" />
-              </Picker>
-            </View>
-
-            <Text style={styles.titleName}>Password</Text>
-            <TextInput
-              style={styles.nameField}
-              placeholder="Enter your password"
-              placeholderTextColor="white"
-              value={password}
-              onChangeText={text => setPassword(text)}
-              secureTextEntry
-            />
-            <Text style={styles.titleName}>Confirm Password</Text>
-            <TextInput
-              style={styles.nameField}
-              placeholder="Confirm your password"
-              placeholderTextColor="white"
-              value={confirmPassword}
-              onChangeText={text => setConfirmPassword(text)}
-              secureTextEntry
-            />
-            <TouchableOpacity
-              style={styles.signupButton}
-              onPress={handleSubmit}>
-              <Text style={styles.signupButtonText}>Signup</Text>
-            </TouchableOpacity>
-
-            <View style={styles.loginLinkContainer}>
-              <Text style={styles.loginText}>Already have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.loginLink}>Login</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </KeyboardAwareScrollView>
-      </ScrollView>
-    </ImageBackground>
+          </KeyboardAwareScrollView>
+        </ScrollView>
+      </ImageBackground>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    // flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
     backgroundColor: '#000000aa',
