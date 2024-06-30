@@ -112,7 +112,6 @@ const Chating = ({ navigation }) => {
       });
   }
 
-
   //get all chat by user id::::--
   const getAllChat = (id) => {
     console.log('id to get chats', id)
@@ -130,6 +129,10 @@ const Chating = ({ navigation }) => {
         console.log(error);
       });
   }
+
+  useEffect(() => {
+    getAllChat('66795a3531c9d29edf3d08fe');
+  }, [isFocused])
 
 
   return (
