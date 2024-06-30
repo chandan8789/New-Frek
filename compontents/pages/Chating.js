@@ -45,8 +45,7 @@ const Chating = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [userDetails, setUserDetails] = useState('');
 
-
-  const [userData, setUserData] = useState([]);//logged in user data
+  const [userData, setUserData] = useState([]); //logged in user data
   const [otherProfile, setOtherProfile] = useState([]);
 
   const [chatMetaData, setChatMetaData] = useState([]);
@@ -55,12 +54,11 @@ const Chating = ({ navigation }) => {
   const [allConversations, setAllConversations] = useState([]);
   const [conversatation, setConversatation] = useState([]);
 
-
   // modal
   const [loading, setLoading] = useState(false);
   const scrollEnd = useRef();
   const [sendMessage, setSendMessage] = useState('');
-  const [newMessage, setNewMessage] = useState([]);//incoming message from socket
+  const [newMessage, setNewMessage] = useState([]); //incoming message from socket
   // new chat
   const [newChatData, setNewChatData] = useState([]);
 
@@ -75,49 +73,51 @@ const Chating = ({ navigation }) => {
     getUserDetails();
   }, []);
 
-
-
-  // sokcet 
+  // sokcet
   useEffect(() => {
-    socketServcies.initializeSocket()
-  }, [isFocused])
+    socketServcies.initializeSocket();
+  }, [isFocused]);
 
   // chat
   // updating incoming stock data from socket
   useEffect(() => {
     socketServcies.on('newMessage', (msg: any) => {
       console.log('new chat Message', msg);
-      setNewMessage(msg)
+      setNewMessage(msg);
     });
   }, []);
 
   // apis
   const sendChat = () => {
     let req = {
-      'message': sendMessage
-    }
+      message: sendMessage,
+    };
     // let url = `${mobile_siteConfig.sendMessage}${otherProfile?.id}`
-    let url = `${mobile_siteConfig.sendMessage}${'66795a3531c9d29edf3d08fe'}`
-    console.log('sending chat to ::', url)
+    // let url = `${mobile_siteConfig.sendMessage}${'66795a3531c9d29edf3d08fe'}`
+    let url = `${mobile_siteConfig.sendMessage}${'6679560a31c9d29edf3d08a8'}`;
+    console.log('sending chat to ::', url);
     postDataWithToken(req, url)
-      .then((r) => {
-        console.log('resp::', r)
-        if (r?.message === "Message sent") {
+      .then(r => {
+        console.log('resp::', r);
+        if (r?.message === 'Message sent') {
           setSendMessage('');
         }
       })
-      .catch((error) => {
+      .catch(error => {
         // Handle error
         console.error('Error:', error);
       });
-  }
+  };
 
   //get all chat by user id::::--
-  const getAllChat = (id) => {
-    console.log('id to get chats', id)
+  const getAllChat = id => {
+    console.log('id to get chats', id);
     postDataWithToken({}, `message/conversation/${id}`)
-      .then((r) => {
-        console.log(' getAllChatby id ==============================resp::', r)
+      .then(r => {
+        console.log(
+          ' getAllChatby id ============================== resp::',
+          r,
+        );
         if (r?.message === 'No conversation found') {
           setConversatation([]);
         } else {
@@ -125,10 +125,10 @@ const Chating = ({ navigation }) => {
           setChatMetaData(r?.conversation);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
 
   useEffect(() => {
     getAllChat('66795a3531c9d29edf3d08fe');
@@ -156,7 +156,6 @@ const Chating = ({ navigation }) => {
       </ScrollView>
 
       <View style={styles.typeChatContener}>
-
         <View style={styles.InputInnerSideCContener}>
           <Image source={require('../images/attachment.png')} />
           <TextInput
@@ -170,7 +169,10 @@ const Chating = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity onPress={() => { sendChat() }}>
+        <TouchableOpacity
+          onPress={() => {
+            sendChat();
+          }}>
           <Image source={require('../images/Subtract.png')} />
         </TouchableOpacity>
       </View>
