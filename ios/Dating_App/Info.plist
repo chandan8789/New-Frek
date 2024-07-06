@@ -35,10 +35,21 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 	  <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
-		<key>NSAllowsArbitraryLoads</key>
+		<!-- <key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
-		<true/>
+		<true/> -->
+
+		<!-- new down back to previous is above -->
+			<key>NSExceptionDomains</key>
+			<dict>
+				<key>http://45.61.60.89:3000/</key>
+				<dict>
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true/>
+				</dict>
+			</dict>
+		<!-- end -->
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>

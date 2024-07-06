@@ -4,8 +4,8 @@ const mobile_siteConfig = Object.freeze({
   IS_LOGIN: 'FALSE',
 
   // BASE_URL: 'http://10.0.2.2:4000/',
-  BASE_URL: 'http://45.61.60.89:3000/',
-  CHAT_SOCKET_URL: 'http://45.61.60.89:3000/',
+  BASE_URL: 'https://thefrekapp.com/',
+  CHAT_SOCKET_URL: 'https://thefrekapp.com/',
   // auth
   signup: 'auth/signup',
   question: 'user/questions',

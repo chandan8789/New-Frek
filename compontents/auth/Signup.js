@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,16 +15,16 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-import {Picker} from '@react-native-picker/picker';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { Picker } from '@react-native-picker/picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 
-import {postData} from '../service/mobileApi';
+import { postData } from '../service/mobileApi';
 import mobile_siteConfig from '../service/mobile-site-config';
 
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -114,10 +114,12 @@ const Signup = ({navigation}) => {
       <ImageBackground
         source={require('../images/background.jpg')}
         style={styles.backgroundImage}>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.container}>
           <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={styles.header}>
                 <Text style={styles.welcome}>Welcome,</Text>
                 <Text style={styles.titles}>Enter Your Details to</Text>
@@ -173,7 +175,9 @@ const Signup = ({navigation}) => {
                 <Picker
                   selectedValue={selectedValue}
                   onValueChange={itemValue => setSelectedValue(itemValue)}
-                  style={styles.picker}>
+                  style={styles.picker}
+                  itemStyle={{ color: 'white' }}
+                >
                   <Picker.Item label="Select Gender" value="" />
                   <Picker.Item label="Male" value="Male" />
                   <Picker.Item label="Female" value="Female" />
@@ -230,6 +234,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: widthPercentageToDP('5%'),
     backgroundColor: '#000000aa',
     height: heightPercentageToDP('100%'),
+    paddingVertical: heightPercentageToDP(6)
   },
   avatar: {
     marginTop: heightPercentageToDP('2%'),
@@ -264,6 +269,7 @@ const styles = StyleSheet.create({
     borderWidth: heightPercentageToDP('0.1%'),
     fontSize: heightPercentageToDP(1.9),
     color: 'white',
+    paddingVertical: heightPercentageToDP(1.5)
   },
   dobText: {
     color: 'white',

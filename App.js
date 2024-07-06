@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Signup from './compontents/auth/Signup';
 import Login from './compontents/auth/Login';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Header from './compontents/pages/Header';
 import StreamChat from './compontents/pages/StreamChat';
 import About from './compontents/pages/About';
@@ -16,13 +16,14 @@ import LogoComponent from './compontents/pages/LogoComponent';
 import AudiencePage from './compontents/stream/screen/AudiancePage';
 import HomePage from './compontents/stream/screen/HomePage';
 import HostPage from './compontents/stream/screen/HostPage';
+import { StatusBar } from 'react-native';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="LogoComponent" component={LogoComponent} />
 
         <Stack.Screen name="Signup" component={Signup} />

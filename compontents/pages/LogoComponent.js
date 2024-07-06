@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
-import {View, Animated, StyleSheet, Image} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Animated, StyleSheet, Image } from 'react-native';
 import mobile_siteConfig from '../service/mobile-site-config';
 
 const LogoComponent = () => {

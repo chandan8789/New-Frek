@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,15 +9,15 @@ import {
   ImageBackground,
   Alert,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postData} from '../service/mobileApi'; // Ensure this is correctly imported
+import { postData } from '../service/mobileApi'; // Ensure this is correctly imported
 import mobile_siteConfig from '../service/mobile-site-config';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -69,10 +69,10 @@ const Login = () => {
       source={require('../images/background.jpg')}
       style={styles.backgroundImage}>
       <KeyboardAwareScrollView
-        style={{backgroundColor: '#000000aa'}}
+        style={{ backgroundColor: '#000000aa' }}
         keyboardShouldPersistTaps={'always'}>
         <View style={styles.container}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <Text style={styles.welcomeBack}>Welcome Back,</Text>
               <Text style={styles.titlelgoin}>You have been Missed</Text>
@@ -86,7 +86,7 @@ const Login = () => {
             </View>
           </View>
 
-          <View style={{marginTop: 50}}>
+          <View style={{ marginTop: heightPercentageToDP(2) }}>
             <Text style={styles.titleName}>Email</Text>
             <TextInput
               style={styles.inputEmail}
@@ -114,11 +114,11 @@ const Login = () => {
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
-              marginTop: 10,
+              marginTop: heightPercentageToDP(1.5),
             }}>
-            <Text style={{color: 'white'}}>Don't have an account? </Text>
+            <Text style={{ color: 'white' }}>Don't have an account? </Text>
             <Text
-              style={{color: 'rgba(0, 122, 255, 1)'}}
+              style={{ color: 'rgba(0, 122, 255, 1)' }}
               onPress={() => navigation.navigate('Signup')}>
               Sign Up
             </Text>
@@ -134,8 +134,8 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: heightPercentageToDP('5%'),
-    paddingHorizontal: widthPercentageToDP('5%'),
+    paddingVertical: heightPercentageToDP('7%'),
+    paddingHorizontal: widthPercentageToDP('4%'),
   },
   welcomeBack: {
     color: 'white',
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     fontSize: heightPercentageToDP(2.5),
     fontWeight: '500',
     color: 'white',
+    paddingTop: heightPercentageToDP(0.7)
   },
   avatar: {
     marginTop: heightPercentageToDP('10%'),
@@ -165,7 +166,8 @@ const styles = StyleSheet.create({
     paddingLeft: heightPercentageToDP('2%'),
     borderWidth: heightPercentageToDP('0.1%'),
     fontSize: heightPercentageToDP(1.9),
-    color: 'white', // Added color to make text visible
+    color: 'white', // Added color to make text visible,
+    paddingVertical: heightPercentageToDP(2),
   },
   signupButton: {
     backgroundColor: 'rgba(0, 122, 255, 1)',
