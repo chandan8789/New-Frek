@@ -6,10 +6,10 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Carousel from '../pages/Carousel';
-import {useNavigation} from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import {
   heightPercentageToDP,
@@ -18,7 +18,7 @@ import {
 import mobile_siteConfig from '../service/mobile-site-config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from './Footer';
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const Header = () => {
   const navigation = useNavigation();
@@ -46,22 +46,27 @@ const Header = () => {
   return (
     <>
       <StatusBar
-        barStyle="light-content"
+        barStyle="dark-content"
         backgroundColor="transparent"
         translucent={true}
       />
       <View style={styles.container}>
         <View style={styles.topHeader}>
+
           <View style={styles.userInfo}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Image source={{uri: userData?.avatar}} style={styles.avatar} />
+              <Image source={userData?.avatar !== 'http://45.61.60.89:3000/public/images/1718965492683-default.png'
+                ? { uri: userData?.avatar }
+                : require('../images/profileImage.png')}
+                style={styles.avatar} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomHeader}>Welcome Back,</Text>
               <Text style={styles.nameHeader}>{userData?.name}</Text>
             </View>
           </View>
-          <View style={styles.iconContainer}>
+
+          <View style={[styles.iconContainer, {}]}>
             <TouchableOpacity
               onPress={() => navigation.navigate('Stream-Chat')}>
               <Image
@@ -73,7 +78,19 @@ const Header = () => {
         </View>
       </View>
 
-      <Carousel />
+      <View style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // backgroundColor: 'red',
+        marginTop: heightPercentageToDP(7)
+      }}>
+        <View style={{
+          height: heightPercentageToDP(60),
+        }}>
+          <Carousel />
+        </View>
+      </View>
 
       <Footer />
     </>
@@ -91,14 +108,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
     width: '100%',
-    paddingVertical: height * 0.06,
-    paddingHorizontal: width * 0.06,
+    paddingTop: heightPercentageToDP(5.5),
+    paddingHorizontal: widthPercentageToDP(4),
+    paddingBottom: heightPercentageToDP(2.5),
     borderBottomEndRadius: 50,
     borderBottomStartRadius: 50,
+    shadowColor: '#000', // iOS shadow color
+    shadowOffset: { width: 0, height: 4, borderRadius: heightPercentageToDP(2.5) }, // iOS shadow offset
+    shadowOpacity: 0.25, // iOS shadow opacity
+    shadowRadius: 3.84, // iOS shadow radius
+    elevation: 5, // Android shadow
+    marginBottom: heightPercentageToDP(1)
+
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: heightPercentageToDP(1.5)
   },
   avatar: {
     height: heightPercentageToDP('6%'),

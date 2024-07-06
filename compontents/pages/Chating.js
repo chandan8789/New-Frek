@@ -10,38 +10,49 @@ import {
   Dimensions,
   ScrollView,
   TextInput,
+  FlatList,
 } from 'react-native';
 import mobile_siteConfig from '../service/mobile-site-config';
 import socketServcies from '../userInfoMapperSocket';
-import { postDataWithToken } from '../service/mobileApi';
+import { getData, postDataWithToken } from '../service/mobileApi';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
-const Sender = () => {
+const Sender = ({ item, userDetails }) => {
+  console.log('fdsafsfsafaffdasfasfa1', userDetails._id);
+  console.log('fdsafsfsafaffdasfasfa2', item?._id)
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../images/Ellipse.png')}
-        style={styles.emojiImage}
-      />
-      <View style={styles.chatContainer}>
-        {/* <View style={[styles.messageContainer, isSender ? styles.senderMessage : styles.receiverMessage]}> */}
+      {userDetails._id !== item?.sender &&
+        <Image
+          source={require('../images/Ellipse.png')}
+          style={styles.emojiImage}
+        />}
+      {/* <View style={[styles.messageContainer, isSender ? styles.senderMessage : styles.receiverMessage]}> */}
+
+      {userDetails._id !== item?.sender ?
         <View style={styles.messageTimeContener}>
           <View style={[styles.messageContainer, styles.receiverMessage]}>
-            <Text style={styles.message}>Good Afternoon</Text>
+            <Text style={styles.message}>{item?.message}</Text>
             <Text style={styles.time}>12:30 PM</Text>
           </View>
         </View>
-        <View style={[styles.messageContainer, styles.senderMessage]}>
-          <Text style={styles.message}>Good Afternoon</Text>
-          <Text style={styles.time}>12:30 PM</Text>
+
+        :
+
+        <View style={styles.chatContainer}>
+          <View style={[styles.messageContainer, styles.senderMessage]}>
+            <Text style={styles.message}>{item?.message}</Text>
+            <Text style={styles.time}>12:30 PM</Text>
+          </View>
         </View>
-      </View>
+      }
     </View>
   );
 };
 
-const Chating = ({ navigation }) => {
+const Chating = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const [userDetails, setUserDetails] = useState('');
 
@@ -62,6 +73,8 @@ const Chating = ({ navigation }) => {
   // new chat
   const [newChatData, setNewChatData] = useState([]);
 
+
+  // getting self data
   useEffect(() => {
     const getUserDetails = async () => {
       const value = await AsyncStorage.getItem(mobile_siteConfig.USER_DETAIL);
@@ -78,8 +91,7 @@ const Chating = ({ navigation }) => {
     socketServcies.initializeSocket();
   }, [isFocused]);
 
-  // chat
-  // updating incoming stock data from socket
+  // chat socket
   useEffect(() => {
     socketServcies.on('newMessage', (msg: any) => {
       console.log('new chat Message', msg);
@@ -87,14 +99,62 @@ const Chating = ({ navigation }) => {
     });
   }, []);
 
+  useEffect(() => {
+    console.log('newMessage1212121212121212', newMessage, newMessage.length);
+    console.log('chat metad data::', chatMetaData, isGroupChat);
+
+    if (typeof newMessage === 'object' && Object.keys(newMessage).length !== 0) {
+
+      if (chatMetaData?.id === undefined && isGroupChat === false) {
+        setTimeout(() => {
+          console.log('hello there first time::1', otherProfile?._id);
+          if (otherProfile?._id !== undefined) {
+            getAllChat(otherProfile?._id);
+          }
+        }, 500);
+        return;
+      }
+
+      if (Number(newMessage?.message?.conversation_id) === Number(chatMetaData?.id)) {
+        console.log('this personal message is for me', chatMetaData?.id);
+        if (conversatation !== undefined && conversatation?.length > 0) {
+          var newArray = [...conversatation, newMessage?.message]
+          console.log('typeof', typeof (newArray))
+          setConversatation(newArray);
+        } else {
+          console.log('else 2::', newMessage);
+          if (typeof newMessage === 'object' && Object.keys(newMessage).length !== 0) {
+            setConversatation(prevMessages => [...prevMessages, newMessage?.message]);
+          }
+        }
+        return
+      }
+
+      if (Number(newMessage?.message?.conversation_id) === Number(routeDatax?.id) &&
+        newMessage?.message?.conversation_id !== undefined) {
+        console.log('this Group message is for me');
+        if (conversatation !== undefined && conversatation?.length > 0) {
+          var newArray = [...conversatation, newMessage?.message]
+          console.log('typeof1234', typeof (newArray))
+          setConversatation(newArray)
+        } else {
+          if (typeof newMessage === 'object' && Object.keys(newMessage).length !== 0) {
+            setConversatation(prevMessages => [...prevMessages, newMessage?.message]);
+          }
+        }
+        return
+
+      }
+    }
+  }, [newMessage])
+
   // apis
   const sendChat = () => {
     let req = {
       message: sendMessage,
     };
-    // let url = `${mobile_siteConfig.sendMessage}${otherProfile?.id}`
-    // let url = `${mobile_siteConfig.sendMessage}${'66795a3531c9d29edf3d08fe'}`
-    let url = `${mobile_siteConfig.sendMessage}${'6679560a31c9d29edf3d08a8'}`;
+    console.log('req:::', req)
+    let url = `${mobile_siteConfig.sendMessage}${'6688d7eee45209ef14651ad5'}`;
     console.log('sending chat to ::', url);
     postDataWithToken(req, url)
       .then(r => {
@@ -112,11 +172,10 @@ const Chating = ({ navigation }) => {
   //get all chat by user id::::--
   const getAllChat = id => {
     console.log('id to get chats', id);
-    postDataWithToken({}, `message/conversation/${id}`)
+    getData(`message/conversation/${id}`)
       .then(r => {
         console.log(
-          ' getAllChatby id ============================== resp::',
-          r,
+          'getAllChat response::::', r,
         );
         if (r?.message === 'No conversation found') {
           setConversatation([]);
@@ -126,13 +185,21 @@ const Chating = ({ navigation }) => {
         }
       })
       .catch(error => {
-        console.log(error);
+        console.log('getAllChat errrr', error);
       });
   };
 
   useEffect(() => {
-    getAllChat('66795a3531c9d29edf3d08fe');
-  }, [isFocused])
+    if (route?.params) {
+      if (route?.params.data !== undefined) {
+        console.log('route data', route?.params.data);
+        var idToGetChat = route?.params.data?.participants[0]?._id
+        console.log('idtogetchat', idToGetChat);
+        getAllChat(idToGetChat);
+        setOtherProfile(route?.params.data?.participants[0]);
+      }
+    }
+  }, [route])
 
 
   return (
@@ -147,33 +214,65 @@ const Chating = ({ navigation }) => {
         </TouchableOpacity> */}
       </View>
 
-      <ScrollView>
-        <View>
-          {[...Array(4)].map((_, index) => (
-            <Sender key={index} />
-          ))}
-        </View>
-      </ScrollView>
+
+      <FlatList
+        ref={scrollEnd}
+        data={conversatation}
+        onContentSizeChange={() =>
+          scrollEnd.current.scrollToEnd({ animated: true })
+        }
+        renderItem={({ item, index }) => {
+          return (
+            <Sender
+              item={item}
+              userDetails={userDetails}
+              key={index}
+            />
+          )
+        }}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+
 
       <View style={styles.typeChatContener}>
         <View style={styles.InputInnerSideCContener}>
-          <Image source={require('../images/attachment.png')} />
+          {/* <Image source={require('../images/attachment.png')} /> */}
           <TextInput
-            style={{ color: 'black' }}
             placeholder="Type your message"
+            style={{
+              paddingLeft: widthPercentageToDP(2),
+              color: 'black',
+              paddingVertical: heightPercentageToDP(2),
+              // flex: 1
+              width: widthPercentageToDP(75)
+            }}
             placeholderTextColor="gray"
+            value={sendMessage}
+            onChangeText={text => setSendMessage(text)}
           />
-          <Image
+          {/* <Image
             source={require('../images/Vector123.png')}
             style={{ marginLeft: '40%' }}
-          />
+          /> */}
         </View>
 
         <TouchableOpacity
           onPress={() => {
             sendChat();
           }}>
-          <Image source={require('../images/Subtract.png')} />
+          <View style={{
+            height: heightPercentageToDP(5),
+            width: widthPercentageToDP(5),
+          }}>
+            <Image
+              style={{
+                height: '100%',
+                width: '100%',
+                resizeMode: 'contain',
+              }}
+              source={require('../images/Subtract.png')} />
+          </View>
         </TouchableOpacity>
       </View>
     </>

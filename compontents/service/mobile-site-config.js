@@ -18,6 +18,14 @@ const mobile_siteConfig = Object.freeze({
   getIndividualsConversations: "message/conversations/",
   sendMessage: 'message/send/',
 
+
+  // matches
+  GET_ALL_MATCHES: 'user/matched',
+
+  //LIKE
+  LIKE_USER: 'action/like',
+
+
 });
 
 export default mobile_siteConfig;

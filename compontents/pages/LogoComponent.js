@@ -36,7 +36,9 @@ const LogoComponent = () => {
         useNativeDriver: true,
       });
     });
-    handleNavigation();
+    setTimeout(() => {
+      handleNavigation();
+    }, 3500);
   }, []);
 
   return (
