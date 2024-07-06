@@ -194,10 +194,19 @@ const Chating = ({ navigation, route }) => {
     if (route?.params) {
       if (route?.params.data !== undefined) {
         console.log('route data', route?.params.data);
-        var idToGetChat = route?.params.data?.participants[0]?._id
-        console.log('idtogetchat', idToGetChat);
-        getAllChat(idToGetChat);
-        setOtherProfile(route?.params.data?.participants[0]);
+
+        if (route?.params.data?.participants !== undefined) {
+          var idToGetChat = route?.params.data?.participants && route?.params.data?.participants[0]?._id
+          console.log('idtogetchat', idToGetChat);
+          getAllChat(idToGetChat);
+          setOtherProfile(route?.params.data?.participants[0]);
+          return
+        } else {
+          var idToGetChat = route?.params.data?.id
+          console.log('idtogetchat', idToGetChat);
+          getAllChat(idToGetChat);
+          setOtherProfile(route?.params.data);
+        }
       }
     }
   }, [route])
@@ -209,7 +218,8 @@ const Chating = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.navigate('Stream-Chat')}>
           <Image source={require('../images/left-arrow.png')} />
         </TouchableOpacity>
-        <Text style={styles.headerText}>{userDetails?.name}</Text>
+
+        <Text style={styles.headerText}>{otherProfile?.name}</Text>
         {/* <TouchableOpacity>
           <Image source={require('../images/dots-vertical.png')} />
         </TouchableOpacity> */}
@@ -283,7 +293,9 @@ const Chating = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   header: {
     width: '100%',
-    height: 120,
+    paddingTop: heightPercentageToDP(7),
+    paddingBottom: heightPercentageToDP(2),
+    // height: 120,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',

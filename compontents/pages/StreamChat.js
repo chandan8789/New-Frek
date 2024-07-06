@@ -165,6 +165,7 @@ const StreamChat = () => {
 
   const handleGoToChating = (item) => {
     navigation.navigate('Chating', { data: item });
+    console.log('item:::', item)
   };
 
   const backToHomePage = () => {
@@ -305,11 +306,14 @@ const StreamChat = () => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
-                <AvatarImages
-                  item={item}
-                  key={index}
-                  onPress={handleGoToChating}
-                />
+                <TouchableOpacity onPress={() => { handleGoToChating(item) }}>
+
+                  <AvatarImages
+                    item={item}
+                    key={index}
+                    onPress={() => { }}
+                  />
+                </TouchableOpacity>
               )}
             />
           </View>
