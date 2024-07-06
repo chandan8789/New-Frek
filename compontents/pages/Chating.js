@@ -155,7 +155,7 @@ const Chating = ({ navigation, route }) => {
       message: sendMessage,
     };
     console.log('req:::', req)
-    let url = `${mobile_siteConfig.sendMessage}${'6688d7eee45209ef14651ad5'}`;
+    let url = `${mobile_siteConfig.sendMessage}${otherProfile.id !== undefined ? otherProfile.id : otherProfile?._id}`;
     console.log('sending chat to ::', url);
     postDataWithToken(req, url)
       .then(r => {

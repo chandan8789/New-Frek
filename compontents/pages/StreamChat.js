@@ -337,8 +337,6 @@ const StreamChat = () => {
             }}>
               <FlatList
                 data={allConversatation}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
                 renderItem={({ item, index }) => (
                   <ChatsWithPerson
                     item={item}
