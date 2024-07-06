@@ -16,6 +16,7 @@ import mobile_siteConfig from '../service/mobile-site-config';
 import socketServcies from '../userInfoMapperSocket';
 import { getData, postDataWithToken } from '../service/mobileApi';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import moment from 'moment';
 
 const { width } = Dimensions.get('window');
 
@@ -35,7 +36,7 @@ const Sender = ({ item, userDetails }) => {
         <View style={styles.messageTimeContener}>
           <View style={[styles.messageContainer, styles.receiverMessage]}>
             <Text style={styles.message}>{item?.message}</Text>
-            <Text style={styles.time}>12:30 PM</Text>
+            <Text style={styles.time}>{moment(item?.createdAt).fromNow()}</Text>
           </View>
         </View>
 
@@ -44,7 +45,7 @@ const Sender = ({ item, userDetails }) => {
         <View style={styles.chatContainer}>
           <View style={[styles.messageContainer, styles.senderMessage]}>
             <Text style={styles.message}>{item?.message}</Text>
-            <Text style={styles.time}>12:30 PM</Text>
+            <Text style={styles.time}>{moment(item?.createdAt).fromNow()}</Text>
           </View>
         </View>
       }

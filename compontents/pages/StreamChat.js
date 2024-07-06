@@ -280,19 +280,10 @@ const StreamChat = () => {
       </View>
 
 
-      {allConversatation.length === 0 ?
-        <View style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Text style={{
-            color: 'black'
-          }}>No conversatation Found</Text>
-        </View>
-        :
-        <View style={{ flex: 1, }}>
 
+      <View style={{ flex: 1, }}>
+
+        {allMatches.length > 0 &&
           <View style={styles.inputContainer}>
             <Image
               source={require('../images/search-lg.png')}
@@ -304,45 +295,59 @@ const StreamChat = () => {
               placeholderTextColor="gray"
             />
           </View>
+        }
 
-          {allMatches.length > 0 &&
-            <View>
-              <Text style={styles.matches}>Matches</Text>
-              <FlatList
-                data={allMatches}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item, index }) => (
-                  <AvatarImages
-                    item={item}
-                    key={index}
-                    onPress={handleGoToChating}
-                  />
-                )}
-              />
-            </View>
-          }
-
-          <Text style={styles.chats}>Chats</Text>
-
-          <View style={{
-            marginTop: heightPercentageToDP(2)
-          }}>
+        {allMatches.length > 0 &&
+          <View>
+            <Text style={styles.matches}>Matches</Text>
             <FlatList
-              data={allConversatation}
+              data={allMatches}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
-                <ChatsWithPerson
+                <AvatarImages
                   item={item}
                   key={index}
-                  onPress={() => { handleGoToChating(item) }}
+                  onPress={handleGoToChating}
                 />
               )}
             />
           </View>
-        </View>
-      }
+        }
+
+        {allConversatation.length === 0 ?
+          <View style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Text style={{
+              color: 'black'
+            }}>No conversatation Found</Text>
+          </View>
+          :
+          <>
+            <Text style={styles.chats}>Chats</Text>
+            <View style={{
+              marginTop: heightPercentageToDP(2)
+            }}>
+              <FlatList
+                data={allConversatation}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item, index }) => (
+                  <ChatsWithPerson
+                    item={item}
+                    key={index}
+                    onPress={() => { handleGoToChating(item) }}
+                  />
+                )}
+              />
+            </View>
+          </>
+        }
+      </View>
+
 
     </View>
   );
